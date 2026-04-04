@@ -45,12 +45,6 @@ env/
 .coverage
 htmlcov/
 
-# Knowledge base (can be regenerated)
-backend/knowledge/data/chunks.json
-backend/knowledge/data/structured_data.json
-backend/knowledge/data/image_catalog.json
-backend/knowledge/data/images/
-
 # Node modules (if using frontend build tools)
 node_modules/
 dist/
