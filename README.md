@@ -64,7 +64,7 @@ The agent:
 │           Backend (FastAPI + Python)               │
 │                    │                               │
 │    ┌───────────────▼────────────────────┐         │
-│    │     Claude Sonnet 4 (Anthropic API) │         │
+│    │     Claude Opus 4 (Anthropic API)   │         │
 │    │     System prompt + 6 tool defs     │         │
 │    └───┬───────┬───────┬───────┬────────┘         │
 │        │       │       │       │                   │
@@ -384,7 +384,7 @@ Ask these questions to verify the agent works correctly:
 
 | Component | Technology | Why |
 |-----------|-----------|-----|
-| LLM | Claude Sonnet 4 | Best reasoning + tool use + vision |
+| LLM | Claude Opus 4 | Best reasoning + tool use + vision |
 | Backend | FastAPI (Python) | Async streaming, zero boilerplate |
 | Frontend | Vanilla HTML/CSS/JS | Zero build step, instant setup |
 | PDF processing | PyMuPDF (fitz) | Fast, reliable text + image extraction |
