@@ -8,20 +8,18 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements and install Python dependencies
-COPY backend/requirements.txt .
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application
+# Copy application code + frontend + source PDFs
 COPY backend ./backend
+COPY frontend ./frontend
 COPY files ./files
 
-# Ensure knowledge directory exists
-RUN mkdir -p backend/knowledge/data/images
-
-# Extract knowledge base
-RUN python backend/scripts/extract.py
-
-# Start server
-CMD ["python", "backend/app.py"]
+# Knowledge base is pre-extracted and committed to repo
+# No need to run extract.py at build time
 
 EXPOSE 8000
+
+# Start server — Railway sets $PORT automatically
+CMD ["python", "backend/app.py"]
