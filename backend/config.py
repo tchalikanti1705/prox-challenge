@@ -25,6 +25,7 @@ load_dotenv(Path(__file__).parent.parent / ".env")
 
 # ===== API KEYS =====
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
 if not ANTHROPIC_API_KEY:
     print("WARNING: ANTHROPIC_API_KEY not set. Chat will not work until it is configured.")
 
@@ -39,9 +40,18 @@ IMAGES_DIR = KNOWLEDGE_DIR / "images"
 MODEL = "claude-opus-4-20250514"
 MAX_TOKENS = 8096
 
-# ===== TOOL CONFIGURATION =====
-EMBEDDING_MODEL = "text-embedding-3-small"  # OpenAI embeddings
-USE_OPENAI_EMBEDDINGS = False  # Set to False to skip OpenAI embeddings
+# ===== EMBEDDING & SEARCH =====
+EMBEDDING_MODEL = "text-embedding-3-small"  # OpenAI embeddings (1536 dims)
+USE_OPENAI_EMBEDDINGS = bool(OPENAI_API_KEY)  # Auto-enable if key present
+
+# Hybrid search weights (must sum to 1.0)
+SEARCH_WEIGHT_EMBEDDING = 0.5
+SEARCH_WEIGHT_KEYWORD = 0.3
+SEARCH_WEIGHT_STRUCTURED = 0.2
+
+# ===== CACHING =====
+TOOL_CACHE_SIZE = 256  # LRU cache for tool results
+MAX_CONVERSATION_MESSAGES = 20  # Trim older messages beyond this
 
 # ===== ENSURE DIRECTORIES EXIST =====
 KNOWLEDGE_DIR.mkdir(parents=True, exist_ok=True)

@@ -4,12 +4,17 @@ Agent client — agentic tool-use loop powered by the Anthropic Python SDK.
 Implements the full agent loop with streaming:
 1. Send user message + tool definitions to Claude
 2. Stream text tokens as they arrive for fast display
-3. If Claude returns tool_use blocks, execute them locally
+3. If Claude returns tool_use blocks, execute them in parallel
 4. Feed tool results back and let Claude continue reasoning
 5. Repeat until Claude produces a final text response (max 10 turns)
 
-Yields (event_type, data) tuples so the route can emit typed SSE events.
+Improvements over v1:
+- Parallel tool execution via asyncio.gather
+- Connection pooling with timeout and retry
+- Conversation context trimming (keeps last N messages)
+- Tool-specific loading states with emoji labels
 """
+import asyncio
 import json
 from typing import AsyncGenerator, List, Optional, Tuple
 
@@ -17,22 +22,51 @@ from anthropic import AsyncAnthropic
 
 from agent.prompts import SYSTEM_PROMPT
 from agent.tools import TOOL_DEFINITIONS, execute_tool
-from config import ANTHROPIC_API_KEY, MODEL, MAX_TOKENS
+from config import ANTHROPIC_API_KEY, MODEL, MAX_TOKENS, MAX_CONVERSATION_MESSAGES
 
 
-_client = AsyncAnthropic(api_key=ANTHROPIC_API_KEY)
+# Connection pooling: single client with timeout and retry
+_client = AsyncAnthropic(
+    api_key=ANTHROPIC_API_KEY,
+    timeout=60.0,
+    max_retries=2,
+)
 
 MAX_TOOL_TURNS = 10
 
-# Friendly labels for tool names
+# Friendly labels for tool names (with emoji for UX)
 _TOOL_LABELS = {
-    "search_knowledge": "Searching the manual",
-    "lookup_duty_cycle": "Looking up duty cycle data",
-    "lookup_polarity": "Checking polarity settings",
-    "get_troubleshooting": "Finding troubleshooting steps",
-    "search_manual_images": "Searching for diagrams",
-    "get_specifications": "Pulling up specifications",
+    "search_knowledge": "📖 Searching the manual",
+    "lookup_duty_cycle": "📊 Looking up duty cycle data",
+    "lookup_polarity": "🔌 Checking polarity settings",
+    "get_troubleshooting": "🔧 Finding troubleshooting steps",
+    "search_manual_images": "🖼️ Searching for diagrams",
+    "get_specifications": "📋 Pulling up specifications",
 }
+
+
+def _trim_history(messages: List[dict]) -> List[dict]:
+    """
+    Trim conversation history to prevent context window overflow.
+    
+    Keeps the last MAX_CONVERSATION_MESSAGES messages.
+    If trimmed, prepends a summary note so Claude has context.
+    """
+    if len(messages) <= MAX_CONVERSATION_MESSAGES:
+        return messages
+
+    trimmed_count = len(messages) - MAX_CONVERSATION_MESSAGES
+    recent = messages[-MAX_CONVERSATION_MESSAGES:]
+
+    # Inject a context note as the first message
+    summary = {
+        "role": "user",
+        "content": (
+            f"[System note: {trimmed_count} earlier messages were trimmed for context. "
+            "The conversation continues below with recent messages.]"
+        )
+    }
+    return [summary] + recent
 
 
 def _build_messages(
@@ -43,7 +77,10 @@ def _build_messages(
     """Build the messages array for the Anthropic API."""
     msgs: List[dict] = []
 
-    for msg in history:
+    # Trim history before building
+    trimmed_history = _trim_history(history)
+
+    for msg in trimmed_history:
         role = msg.get("role", "user")
         content = msg.get("content", "")
         if content:
@@ -66,6 +103,11 @@ def _build_messages(
         msgs.append({"role": "user", "content": user_message})
 
     return msgs
+
+
+async def _execute_tool_async(name: str, params: dict) -> str:
+    """Execute a tool in a thread pool (non-blocking for async)."""
+    return await asyncio.to_thread(execute_tool, name, params)
 
 
 async def chat(
@@ -102,14 +144,10 @@ async def chat(
             messages=api_messages,
         ) as stream:
             async for event in stream:
-                # Stream text tokens as they arrive
                 if event.type == "content_block_delta":
                     if hasattr(event.delta, "text"):
                         yield ("text", event.delta.text)
                         text_parts.append(event.delta.text)
-                    elif hasattr(event.delta, "partial_json"):
-                        # Tool input being built — accumulate silently
-                        pass
 
                 elif event.type == "content_block_start":
                     if hasattr(event.content_block, "type"):
@@ -125,33 +163,43 @@ async def chat(
                         tool_calls.append(current_tool)
                         current_tool = {}
 
-            # Get the final assembled message for history
             final_message = await stream.get_final_message()
 
         # If no tool calls, we're done
         if not tool_calls:
             break
 
-        # Execute tools and continue the loop
+        # Execute tools IN PARALLEL and continue the loop
         api_messages.append({"role": "assistant", "content": final_message.content})
 
-        tool_results = []
-        for tc in tool_calls:
-            label = _TOOL_LABELS.get(tc["name"], tc["name"])
-            yield ("thinking", f"{label}...")
+        # Show tool labels for all tools being called
+        tool_names = [_TOOL_LABELS.get(tc["name"], tc["name"]) for tc in tool_calls]
+        yield ("thinking", " | ".join(tool_names) + "...")
 
-            # Find the matching tool_use block to get the parsed input
+        # Build parallel tasks
+        tasks = []
+        for tc in tool_calls:
             tool_input = {}
             for block in final_message.content:
                 if hasattr(block, "id") and block.id == tc["id"]:
                     tool_input = block.input
                     break
+            tasks.append((tc["id"], tc["name"], tool_input))
 
-            result = execute_tool(tc["name"], tool_input)
+        # Execute all tools concurrently
+        async_tasks = [_execute_tool_async(name, params) for _, name, params in tasks]
+        results = await asyncio.gather(*async_tasks, return_exceptions=True)
+
+        tool_results = []
+        for (tc_id, tc_name, _), result in zip(tasks, results):
+            if isinstance(result, Exception):
+                result_str = f"Error executing {tc_name}: {str(result)}"
+            else:
+                result_str = result
             tool_results.append({
                 "type": "tool_result",
-                "tool_use_id": tc["id"],
-                "content": result,
+                "tool_use_id": tc_id,
+                "content": result_str,
             })
 
         api_messages.append({"role": "user", "content": tool_results})
