@@ -13,7 +13,7 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            background: #000000;
             color: #e0e0e0;
             height: 100vh;
             display: flex;
@@ -29,8 +29,8 @@
 
         .sidebar {
             width: 300px;
-            background: #0f3460;
-            border-right: 1px solid #16213e;
+            background: #0a0a0a;
+            border-right: 1px solid #1a1a1a;
             display: flex;
             flex-direction: column;
             padding: 20px;
@@ -165,12 +165,12 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            background: #1a1a2e;
+            background: #000000;
         }
 
         .header {
-            background: #0f3460;
-            border-bottom: 1px solid #16213e;
+            background: #0a0a0a;
+            border-bottom: 1px solid #1a1a1a;
             padding: 20px;
             text-align: center;
         }
@@ -225,8 +225,9 @@
         }
 
         .message.assistant .message-content {
-            background: #0f3460;
+            background: #111111;
             color: #e0e0e0;
+            border: 1px solid #1a1a1a;
         }
 
         .message.user .message-content {
@@ -235,24 +236,49 @@
         }
 
         .artifact {
-            max-width: 90%;
-            background: #0f3460;
-            border: 1px solid #16213e;
-            border-radius: 8px;
+            max-width: 95%;
+            background: #0a0a0a;
+            border: 1px solid #222;
+            border-radius: 10px;
             overflow: hidden;
-            margin: 8px 0;
+            margin: 10px 0;
+            transition: box-shadow 0.2s;
+        }
+
+        .artifact:hover {
+            box-shadow: 0 0 20px rgba(74, 144, 217, 0.15);
         }
 
         .artifact-title {
-            padding: 12px 16px;
-            border-bottom: 1px solid #16213e;
+            padding: 10px 16px;
+            border-bottom: 1px solid #1a1a1a;
             font-weight: 600;
             font-size: 13px;
+            color: #4a90d9;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .artifact-expand-btn {
+            background: none;
+            border: 1px solid #333;
+            color: #888;
+            padding: 3px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            transition: all 0.15s;
+        }
+
+        .artifact-expand-btn:hover {
+            border-color: #4a90d9;
             color: #4a90d9;
         }
 
         .artifact-content {
             padding: 16px;
+            min-height: 60px;
         }
 
         .artifact-svg {
@@ -300,8 +326,8 @@
         }
 
         .input-area {
-            background: #0f3460;
-            border-top: 1px solid #16213e;
+            background: #0a0a0a;
+            border-top: 1px solid #1a1a1a;
             padding: 16px 20px;
             display: flex;
             gap: 12px;
@@ -321,8 +347,8 @@
 
         #messageInput {
             flex: 1;
-            background: #1a1a2e;
-            border: 1px solid #16213e;
+            background: #111111;
+            border: 1px solid #222;
             color: #e0e0e0;
             padding: 12px;
             border-radius: 6px;
@@ -368,8 +394,8 @@
 
         .image-upload {
             padding: 8px 12px;
-            background: #1a1a2e;
-            border: 1px solid #16213e;
+            background: #111111;
+            border: 1px solid #222;
             border-radius: 6px;
             cursor: pointer;
             font-size: 12px;
@@ -424,7 +450,7 @@
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #16213e;
+            background: #222;
             border-radius: 4px;
         }
 
@@ -446,7 +472,7 @@
         }
 
         .table th {
-            background: #0f3460;
+            background: #111;
             font-weight: 600;
             color: #4a90d9;
         }
@@ -458,8 +484,8 @@
         /* Voice controls */
         .voice-btn {
             padding: 8px 14px;
-            background: #1a1a2e;
-            border: 1px solid #16213e;
+            background: #111111;
+            border: 1px solid #222;
             border-radius: 6px;
             cursor: pointer;
             font-size: 16px;
@@ -487,8 +513,8 @@
 
         .tts-toggle {
             padding: 8px 12px;
-            background: #1a1a2e;
-            border: 1px solid #16213e;
+            background: #111111;
+            border: 1px solid #222;
             border-radius: 6px;
             cursor: pointer;
             font-size: 12px;
@@ -605,6 +631,111 @@
 
         .char-counter.at-limit {
             color: #d94a4a;
+        }
+
+        /* ===== Artifact Fullscreen Modal ===== */
+        .artifact-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.92);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .artifact-modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 24px;
+            background: #0a0a0a;
+            border-bottom: 1px solid #222;
+        }
+
+        .artifact-modal-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #4a90d9;
+        }
+
+        .artifact-modal-controls {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .artifact-modal-btn {
+            background: #111;
+            border: 1px solid #333;
+            color: #ccc;
+            padding: 6px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.15s;
+        }
+
+        .artifact-modal-btn:hover {
+            border-color: #4a90d9;
+            color: #4a90d9;
+        }
+
+        .artifact-modal-btn.close-btn {
+            background: #d94a4a;
+            border-color: #d94a4a;
+            color: white;
+            font-weight: 600;
+        }
+
+        .artifact-modal-btn.close-btn:hover {
+            background: #b93a3a;
+        }
+
+        .artifact-modal-body {
+            flex: 1;
+            overflow: auto;
+            padding: 24px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        .artifact-modal-content {
+            background: #0a0a0a;
+            border: 1px solid #222;
+            border-radius: 10px;
+            padding: 24px;
+            max-width: 100%;
+            min-width: 60%;
+            transition: transform 0.15s;
+            transform-origin: top center;
+        }
+
+        .artifact-modal-content svg {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .artifact-modal-content iframe {
+            width: 100%;
+            min-height: 400px;
+            border: none;
+            border-radius: 6px;
+            background: #0a0a0a;
+        }
+
+        .table td,
+        .table th {
+            border-bottom-color: #1a1a1a;
         }
     </style>
 </head>
@@ -1379,12 +1510,31 @@
 
             const titleDiv = document.createElement('div');
             titleDiv.className = 'artifact-title';
-            titleDiv.textContent = title;
+            const titleText = document.createElement('span');
+            titleText.textContent = title;
+            titleDiv.appendChild(titleText);
+
+            const expandBtn = document.createElement('button');
+            expandBtn.className = 'artifact-expand-btn';
+            expandBtn.textContent = '⛶ Expand';
+            expandBtn.onclick = (e) => {
+                e.stopPropagation();
+                openArtifactModal(type, title, content);
+            };
+            titleDiv.appendChild(expandBtn);
             artifactDiv.appendChild(titleDiv);
 
             const contentDiv = document.createElement('div');
             contentDiv.className = 'artifact-content';
 
+            renderArtifactContent(contentDiv, type, content);
+
+            artifactDiv.appendChild(contentDiv);
+            container.appendChild(artifactDiv);
+        }
+
+        // Render artifact inner content (reused for inline + modal)
+        function renderArtifactContent(contentDiv, type, content) {
             if (type === 'svg') {
                 // Parse SVG safely via DOMParser
                 const parser = new DOMParser();
@@ -1407,7 +1557,7 @@
                 iframe.style.minHeight = '200px';
                 iframe.style.border = 'none';
                 iframe.style.borderRadius = '4px';
-                iframe.style.background = '#1a1a2e';
+                iframe.style.background = '#0a0a0a';
                 iframe.srcdoc = content;
                 // Auto-resize iframe to content height
                 iframe.onload = () => {
@@ -1420,14 +1570,74 @@
                 // Handle image reference
                 const img = document.createElement('img');
                 img.src = `${API_BASE}/images/${content}`;
-                img.alt = title;
+                img.alt = type;
                 img.style.maxWidth = '100%';
                 img.style.borderRadius = '4px';
                 contentDiv.appendChild(img);
             }
+        }
 
-            artifactDiv.appendChild(contentDiv);
-            container.appendChild(artifactDiv);
+        // Open artifact in fullscreen modal
+        function openArtifactModal(type, title, content) {
+            // Create overlay
+            const overlay = document.createElement('div');
+            overlay.className = 'artifact-modal-overlay';
+            overlay.id = 'artifactModal';
+
+            let zoomLevel = 100;
+
+            const header = document.createElement('div');
+            header.className = 'artifact-modal-header';
+            header.innerHTML = `
+                <span class="artifact-modal-title">${escapeHtml(title)}</span>
+                <div class="artifact-modal-controls">
+                    <button class="artifact-modal-btn" id="zoomOutBtn">- Zoom</button>
+                    <span id="zoomLabel" style="color:#888;font-size:12px;min-width:40px;text-align:center">100%</span>
+                    <button class="artifact-modal-btn" id="zoomInBtn">+ Zoom</button>
+                    <button class="artifact-modal-btn close-btn" id="closeModalBtn">✕ Close</button>
+                </div>`;
+            overlay.appendChild(header);
+
+            const body = document.createElement('div');
+            body.className = 'artifact-modal-body';
+
+            const modalContent = document.createElement('div');
+            modalContent.className = 'artifact-modal-content';
+            renderArtifactContent(modalContent, type, content);
+
+            body.appendChild(modalContent);
+            overlay.appendChild(body);
+            document.body.appendChild(overlay);
+
+            // Wire up controls
+            const updateZoom = () => {
+                modalContent.style.transform = `scale(${zoomLevel / 100})`;
+                document.getElementById('zoomLabel').textContent = zoomLevel + '%';
+            };
+
+            document.getElementById('zoomInBtn').onclick = () => {
+                zoomLevel = Math.min(200, zoomLevel + 25);
+                updateZoom();
+            };
+            document.getElementById('zoomOutBtn').onclick = () => {
+                zoomLevel = Math.max(50, zoomLevel - 25);
+                updateZoom();
+            };
+            document.getElementById('closeModalBtn').onclick = () => overlay.remove();
+
+            // Close on Escape
+            const escHandler = (e) => {
+                if (e.key === 'Escape') {
+                    overlay.remove();
+                    document.removeEventListener('keydown', escHandler);
+                }
+            };
+            document.addEventListener('keydown', escHandler);
+
+            // Close on backdrop click
+            body.onclick = (e) => {
+                if (e.target === body) overlay.remove();
+            };
         }
 
         // Add message to UI
