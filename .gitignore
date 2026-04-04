@@ -54,3 +54,9 @@ build/
 *.tmp
 *.log
 .env.backup
+
+# Dead/dev-only files
+check_system.py
+example.py
+backend/requirements.txt
+backend/agent/sdk_tools.py
