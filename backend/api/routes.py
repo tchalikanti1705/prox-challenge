@@ -14,7 +14,7 @@ from fastapi.responses import StreamingResponse, FileResponse
 from api.models import ChatRequest, HealthResponse
 from agent.client import chat
 from knowledge.store import store
-from config import MODEL
+from config import MODEL, USE_OPENAI_EMBEDDINGS
 
 router = APIRouter(prefix="/api")
 
@@ -102,6 +102,7 @@ async def health_check() -> HealthResponse:
         images_count=len(store.image_catalog),
         models={
             "chat_model": MODEL,
-            "embedding_model": "keyword-matching"
+            "embedding_model": "openai-text-embedding-3-small" if USE_OPENAI_EMBEDDINGS else "tfidf-500d",
+            "search": "hybrid (embedding + BM25 + structured)",
         }
     )
