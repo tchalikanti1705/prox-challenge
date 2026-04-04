@@ -24,9 +24,9 @@ if sys.stdout and hasattr(sys.stdout, "reconfigure"):
 load_dotenv(Path(__file__).parent.parent / ".env")
 
 # ===== API KEYS =====
-ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
+ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
 if not ANTHROPIC_API_KEY:
-    raise ValueError("ANTHROPIC_API_KEY not set in .env file")
+    print("WARNING: ANTHROPIC_API_KEY not set. Chat will not work until it is configured.")
 
 # ===== PATHS =====
 BASE_DIR = Path(__file__).parent

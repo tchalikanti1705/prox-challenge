@@ -76,13 +76,13 @@ if __name__ == "__main__":
     import sys
     import os
     
-    # Check for required environment variable
-    if not os.getenv("ANTHROPIC_API_KEY"):
-        print("❌ Error: ANTHROPIC_API_KEY not set in .env file")
-        sys.exit(1)
-    
     # Get port from environment or use default
     port = int(os.getenv("PORT", 8000))
+    
+    # Ensure the backend package is importable when run from project root
+    backend_dir = Path(__file__).parent
+    if str(backend_dir) not in sys.path:
+        sys.path.insert(0, str(backend_dir))
     
     # Start server
     uvicorn.run(

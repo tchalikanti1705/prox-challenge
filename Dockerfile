@@ -21,5 +21,6 @@ COPY files ./files
 
 EXPOSE 8000
 
-# Start server — Railway sets $PORT automatically
-CMD ["python", "backend/app.py"]
+# Start server from backend directory so uvicorn can find "app:app" module
+WORKDIR /app/backend
+CMD ["python", "app.py"]
