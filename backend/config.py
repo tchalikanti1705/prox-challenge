@@ -36,7 +36,7 @@ KNOWLEDGE_DIR = BASE_DIR / "knowledge" / "data"
 IMAGES_DIR = KNOWLEDGE_DIR / "images"
 
 # ===== MODEL CONFIGURATION =====
-MODEL = "claude-sonnet-4-20250514"
+MODEL = "claude-opus-4-20250514"
 MAX_TOKENS = 8096
 
 # ===== TOOL CONFIGURATION =====
