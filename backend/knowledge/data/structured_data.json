@@ -1,0 +1,1096 @@
+{
+  "duty_cycles": {
+    "MIG": {
+      "120V": {
+        "100A": 40,
+        "75A": 100
+      },
+      "240V": {
+        "200A": 25,
+        "115A": 100
+      }
+    },
+    "TIG": {
+      "240V": {
+        "175A": 30,
+        "105A": 100
+      },
+      "120V": {
+        "125A": 40,
+        "90A": 100
+      }
+    },
+    "Stick": {
+      "240V": {
+        "175A": 25,
+        "100A": 100
+      },
+      "120V": {
+        "125A": 40,
+        "60A": 100
+      }
+    },
+    "Flux-Cored": {
+      "240V": {
+        "90A": 60,
+        "130A": 40,
+        "150A": 35,
+        "175A": 25
+      }
+    }
+  },
+  "polarity": {
+    "MIG": {
+      "type": "DCEP (Reverse Polarity)",
+      "torch_socket": "positive",
+      "ground_socket": "negative",
+      "notes": "Electrode positive for standard MIG welding"
+    },
+    "Flux-Cored": {
+      "type": "DCEP (Reverse Polarity)",
+      "torch_socket": "positive",
+      "ground_socket": "negative",
+      "notes": "Most flux-cored wires use DCEP"
+    },
+    "TIG": {
+      "type": "DCEN (Straight Polarity)",
+      "torch_socket": "negative",
+      "ground_socket": "positive",
+      "notes": "DC electrode negative for standard TIG"
+    },
+    "Stick": {
+      "type": "DCEP (Reverse Polarity)",
+      "torch_socket": "positive",
+      "ground_socket": "negative",
+      "notes": "Standard stick electrode configuration"
+    }
+  },
+  "specifications": {
+    "MIG": {
+      "power_input": [
+        "120VAC / 60Hz",
+        "240VAC / 60Hz"
+      ],
+      "current_input_at_output": [
+        "20.8A at 100A",
+        "25.5A at 200A"
+      ],
+      "welding_current_range": [
+        "30-140A",
+        "30-220A"
+      ],
+      "rated_duty_cycles": [
+        "40% @ 100A, 100% @ 75A",
+        "25% @ 200A, 100% @ 115A"
+      ],
+      "maximum_ocv": "86VDC",
+      "weldable_materials": "Mild Steel, Stainless Steel, Aluminum (with optional Spool Gun)",
+      "welding_wire_capacity": "Solid Core: 0.025\"/0.030\"/0.035\", Flux Cored: 0.030\"/0.035\"/0.045\"",
+      "wire_speed": "50-500 IPM",
+      "wire_spool_capacity": "Up to 12 lb spool"
+    },
+    "TIG": {
+      "power_input": [
+        "120VAC / 60Hz",
+        "240VAC / 60Hz"
+      ],
+      "current_input_at_output": [
+        "20.6A at 125A",
+        "15.6A at 175A"
+      ],
+      "welding_current_range": [
+        "10A-125A",
+        "10A-175A"
+      ],
+      "rated_duty_cycles": [
+        "40% @ 125A, 100% @ 90A",
+        "30% @ 175A, 100% @ 105A"
+      ],
+      "maximum_ocv": "86VDC",
+      "weldable_materials": "Mild Steel, Stainless Steel, Chrome Moly"
+    },
+    "Stick": {
+      "power_input": [
+        "120VAC / 60Hz",
+        "240VAC / 60Hz"
+      ],
+      "current_input_at_output": [
+        "19.5A at 80A",
+        "23.7A at 175A"
+      ],
+      "welding_current_range": [
+        "10A-80A",
+        "10A-175A"
+      ],
+      "rated_duty_cycles": [
+        "40% @ 80A, 100% @ 60A",
+        "25% @ 175A, 100% @ 100A"
+      ],
+      "maximum_ocv": "86VDC",
+      "weldable_materials": "Mild Steel, Stainless Steel"
+    },
+    "welding_processes": {
+      "flux_cored_fcaw": {
+        "skill_level": "low",
+        "shielding_gas": "no_gas_required",
+        "materials": [
+          "steel",
+          "stainless_steel"
+        ],
+        "thickness_range": "18_gauge_to_5/16_inch",
+        "applications": [
+          "galvanized_steel",
+          "general_fabrication",
+          "pipe_welding",
+          "maintenance"
+        ],
+        "weld_quality": "more_spatter",
+        "characteristics": [
+          "easy_to_use",
+          "forgives_rusty_or_dirty_shade",
+          "good_gap_bridging_capabilities",
+          "high_deposition_rate_achievable"
+        ]
+      },
+      "mig_gmaw": {
+        "skill_level": [
+          "low",
+          "moderate",
+          "high"
+        ],
+        "shielding_gas": "gas_required",
+        "materials": [
+          "steel",
+          "stainless_steel",
+          "aluminum"
+        ],
+        "thickness_range": "22_gauge_to_3/8_inch",
+        "applications": [
+          "sheet_metal",
+          "automotive_body",
+          "structural_steel"
+        ],
+        "weld_quality": "clean_minimal_spatter",
+        "characteristics": [
+          "fast_production",
+          "excellent_for_learning",
+          "clean_welds_when_set_up",
+          "better_control_on_thin_materials"
+        ]
+      },
+      "stick_smaw": {
+        "skill_level": [
+          "low",
+          "moderate",
+          "high"
+        ],
+        "shielding_gas": "no_gas_required",
+        "materials": [
+          "steel",
+          "stainless_steel"
+        ],
+        "thickness_range": "10_gauge_to_1/2_inch",
+        "applications": [
+          "pipe_and_tubing",
+          "structural_steel",
+          "pressure_vessels",
+          "maintenance_repair"
+        ],
+        "weld_quality": "more_spatter",
+        "characteristics": [
+          "forgiving_on_rusty_or_dirty_shade",
+          "slow_penetration",
+          "good_choice_for_thicker_materials"
+        ]
+      },
+      "tig_gtaw": {
+        "skill_level": [
+          "low",
+          "moderate",
+          "high"
+        ],
+        "shielding_gas": "gas_required",
+        "materials": [
+          "steel",
+          "stainless_steel",
+          "cast_iron",
+          "exotic_alloys"
+        ],
+        "thickness_range": "24_gauge_to_3/16_inch",
+        "applications": [
+          "stainless_steel_exhausts",
+          "bicycle_frames",
+          "thin_sheet_pipe_tubing",
+          "aircraft"
+        ],
+        "weld_quality": "extremely_clean",
+        "characteristics": [
+          "highest_quality_welds",
+          "extremely_aesthetic_weld_appearance",
+          "can_be_used_on_variety_of_materials",
+          "precise_control"
+        ]
+      }
+    },
+    "input_voltage_identification": {
+      "important": "identify_your_input_voltage",
+      "question": "do_you_have_110_volt_or_240_volt",
+      "wire_types": [
+        "mig_or_flux_cored",
+        "wire_grades_differ",
+        "wire_shielding_gas",
+        "contact_tips",
+        "nozzles_differ",
+        "aluminum_wires"
+      ]
+    }
+  },
+  "troubleshooting": [
+    {
+      "category": "Weld Penetration",
+      "issue": "Inadequate Penetration",
+      "description": "Not hot enough",
+      "solutions": [
+        "Increase weld current",
+        "Decrease travel speed",
+        "Use faster wire feed",
+        "Use shorter CTWD"
+      ]
+    },
+    {
+      "category": "Weld Penetration",
+      "issue": "Excess Penetration or Burn-Through",
+      "description": "Too hot",
+      "solutions": [
+        "Decrease weld current",
+        "Increase travel speed",
+        "Use slower wire feed",
+        "Use longer CTWD"
+      ]
+    },
+    {
+      "category": "Wire Feed Issues",
+      "issue": "Voltage Too Low or Wire Feed Too Slow",
+      "solutions": [
+        "Increase Output Voltage",
+        "Increase Wire Feed Speed"
+      ]
+    },
+    {
+      "category": "Wire Feed Issues",
+      "issue": "Voltage Too High or Wire Feed Too Fast",
+      "solutions": [
+        "Decrease Output Voltage",
+        "Decrease Wire Feed Speed"
+      ]
+    },
+    {
+      "category": "Travel Speed Issues",
+      "issue": "Travel Speed Too Fast",
+      "solutions": [
+        "Travel slower"
+      ]
+    },
+    {
+      "category": "Travel Speed Issues",
+      "issue": "Travel Speed Too Slow",
+      "solutions": [
+        "Travel faster"
+      ]
+    },
+    {
+      "category": "CTWD Issues",
+      "issue": "CTWD Too Long or Wrong Polarity",
+      "solutions": [
+        "Check Polarity",
+        "Maintain less than 1/2 inch CTWD"
+      ]
+    },
+    {
+      "issue": "Excess Penetration or Burn-Through",
+      "description": "Weld drops on top and underneath, or falls through entirely, making a hole",
+      "causes_and_solutions": [
+        {
+          "cause": "Workpiece overheating",
+          "solutions": [
+            "Reduce wire feed speed",
+            "Decrease weld current"
+          ]
+        },
+        {
+          "cause": "Travel speed too slow",
+          "solutions": [
+            "Increase travel speed and ensure that travel speed is kept steady"
+          ]
+        },
+        {
+          "cause": "Excessive material at weld",
+          "solutions": [
+            "Reduce wire feed speed"
+          ]
+        }
+      ]
+    },
+    {
+      "issue": "Inadequate Penetration",
+      "description": "Weld does not penetrate the joint fully, just sits on the surface",
+      "causes_and_solutions": [
+        {
+          "cause": "Incorrect welding technique",
+          "solutions": [
+            "Maintain 1/2\" or less CTWD",
+            "Keep arc on leading edge of weld puddle",
+            "Hold MIG Gun at proper angles"
+          ]
+        },
+        {
+          "cause": "Insufficient weld heat",
+          "solutions": [
+            "Reduce travel speed",
+            "Increase weld current"
+          ]
+        },
+        {
+          "cause": "Workpieces too thick/close",
+          "solutions": [
+            "Bevel thick workpieces, allow slight gap, and weld in several passes"
+          ]
+        },
+        {
+          "cause": "Insufficient weld material",
+          "solutions": [
+            "Increase wire feed speed"
+          ]
+        }
+      ]
+    },
+    {
+      "issue": "Bend at Joint",
+      "description": "Profile view showing bent joint",
+      "causes_and_solutions": [
+        {
+          "cause": "Improper clamping",
+          "solutions": [
+            "Clamp workpieces securely",
+            "Make tack welds to hold workpieces"
+          ]
+        },
+        {
+          "cause": "Excessive heat",
+          "solutions": [
+            "Weld a small portion and allow to cool before proceeding",
+            "Increase travel speed",
+            "Reduce wire feed speed"
+          ]
+        }
+      ]
+    },
+    {
+      "issue": "Weld Not Adhering Properly",
+      "description": "Gaps present between weld and previous bead or between weld and workpiece",
+      "causes_and_solutions": [
+        {
+          "cause": "Incorrect welding technique",
+          "solutions": [
+            "Place stringer bead at correct place in joint",
+            "Adjust workpiece position or weld angle to permit proper welding to bottom of piece",
+            "Pause briefly at sides during weave bead",
+            "Keep arc on leading edge of weld puddle",
+            "Hold MIG Gun at proper angles"
+          ]
+        },
+        {
+          "cause": "Insufficient weld heat",
+          "solutions": [
+            "Increase current",
+            "Increase wire feed speed"
+          ]
+        },
+        {
+          "cause": "Dirty workpiece",
+          "solutions": [
+            "Clean workpiece down to bare metal"
+          ]
+        },
+        {
+          "cause": "Insufficient weld material",
+          "solutions": [
+            "Increase wire feed speed"
+          ]
+        },
+        {
+          "cause": "Workpiece gap too narrow",
+          "solutions": [
+            "Widen groove or increase bevel"
+          ]
+        }
+      ]
+    },
+    {
+      "issue": "Coat of Slag Over Weld",
+      "description": "Slag is a necessary part of a flux-cored wire weld. It shields the weld from impurities. Clean off the slag with a Chipping Hammer and Wire Brush after welding. Gas-shielded MIG welds are protected by the shielding gas and do not need slag to protect them.",
+      "causes_and_solutions": []
+    },
+    {
+      "problem": "Wire Weld-Porosity",
+      "description": "Small cavities or holes in the bead",
+      "causes_and_solutions": [
+        {
+          "cause": "Incorrect polarity",
+          "solution": "Check that polarity is set correctly for type of welding"
+        },
+        {
+          "cause": "Insufficient shielding gas (MIG only)",
+          "solution": "Increase flow of gas. Clean nozzle. Maintain proper CTWD"
+        },
+        {
+          "cause": "Incorrect shielding gas (MIG only)",
+          "solution": "Use shielding gas recommended by wire supplier"
+        },
+        {
+          "cause": "Dirty workpiece or welding wire",
+          "solution": "Clean workpiece down to bare metal. Make certain that wire is clean and free from oil, coatings, and other residues"
+        },
+        {
+          "cause": "Inconsistent travel speed",
+          "solution": "Maintain steady travel speed"
+        },
+        {
+          "cause": "CTWD too long",
+          "solution": "Reduce CTWD"
+        }
+      ]
+    },
+    {
+      "problem": "Wire Weld-Excessive Spatter",
+      "description": "Fine spatter is normal. Spatter that is grainy and large is a problem",
+      "causes_and_solutions": [
+        {
+          "cause": "Dirty workpiece or welding wire",
+          "solution": "Clean workpiece down to bare metal. Make certain that wire is clean and free from oil, coatings, and other residues"
+        },
+        {
+          "cause": "Incorrect polarity",
+          "solution": "Check that polarity is set correctly for type of welding"
+        },
+        {
+          "cause": "Insufficient shielding gas (MIG only)",
+          "solution": "Increase flow of gas. Clean nozzle. Maintain proper CTWD"
+        },
+        {
+          "cause": "Wire feeding too fast",
+          "solution": "Reduce wire feed speed"
+        },
+        {
+          "cause": "CTWD too long",
+          "solution": "Reduce CTWD"
+        }
+      ]
+    },
+    {
+      "problem": "Wire Weld-Crooked/Wavy Bead",
+      "description": "",
+      "causes_and_solutions": [
+        {
+          "cause": "Inaccurate welding",
+          "solution": "Use the hands or rest hand on steady surface"
+        },
+        {
+          "cause": "Inconsistent travel speed",
+          "solution": "Maintain steady travel speed"
+        },
+        {
+          "cause": "CTWD too long",
+          "solution": "Reduce CTWD"
+        }
+      ]
+    },
+    {
+      "problem": "Wire Weld-Burn-Through",
+      "description": "Base material melts away, leaving a hole in the weld",
+      "causes_and_solutions": [
+        {
+          "cause": "Workpiece overheating",
+          "solution": "Reduce current and/or wire feed speed"
+        },
+        {
+          "cause": "Travel speed too slow",
+          "solution": "Increase travel speed and ensure that travel speed is kept steady"
+        },
+        {
+          "cause": "Excessive material at weld",
+          "solution": "Reduce wire feed speed"
+        }
+      ]
+    },
+    {
+      "process": "Stick",
+      "category": "Weld Penetration",
+      "problem": "Inadequate Penetration",
+      "cause": "Not hot enough",
+      "solution": "Increase current or weld more slowly"
+    },
+    {
+      "process": "Stick",
+      "category": "Weld Penetration",
+      "problem": "Excess Penetration or Burn-through",
+      "cause": "Too hot",
+      "solution": "Decrease current or weld more quickly"
+    },
+    {
+      "process": "Stick",
+      "category": "Current Issues",
+      "problem": "Current Too Low",
+      "visual": "Narrow, ropy weld bead",
+      "solution": "Increase the current"
+    },
+    {
+      "process": "Stick",
+      "category": "Current Issues",
+      "problem": "Current Too High",
+      "visual": "Wide, flat weld with spatter",
+      "solution": "Decrease the current"
+    },
+    {
+      "process": "Stick",
+      "category": "Weld Speed Issues",
+      "problem": "Weld Speed Too Fast",
+      "visual": "Narrow, uneven weld bead",
+      "solution": "Weld slower"
+    },
+    {
+      "process": "Stick",
+      "category": "Weld Speed Issues",
+      "problem": "Weld Speed Too Slow",
+      "visual": "Wide, overlapping weld pattern",
+      "solution": "Weld faster"
+    },
+    {
+      "process": "Stick",
+      "category": "Arc Length Issues",
+      "problem": "Arc Length Too Short",
+      "visual": "Irregular, lumpy weld bead",
+      "solution": "Increase distance"
+    },
+    {
+      "process": "Stick",
+      "category": "Arc Length Issues",
+      "problem": "Arc Length Too Long",
+      "visual": "Spattered, inconsistent weld",
+      "solution": "Decrease distance"
+    },
+    {
+      "process": "Stick",
+      "issue": "Excess Penetration or Burn-Through",
+      "description": "Weld drools on top and underneath or falls through entirely, making a hole.",
+      "causes_solutions": [
+        {
+          "cause": "Workpiece overheating",
+          "solution": "Reduce current"
+        },
+        {
+          "cause": "Welding speed too slow",
+          "solution": "Increase welding speed and ensure that welding speed is kept steady"
+        }
+      ]
+    },
+    {
+      "process": "Stick",
+      "issue": "Inadequate Penetration",
+      "description": "Weld does not contact the joint fully, just on the surface.",
+      "causes_solutions": [
+        {
+          "cause": "Incorrect welding technique",
+          "solution": "Keep arc on leading edge of weld puddle. Hold torch at proper angles"
+        },
+        {
+          "cause": "Insufficient weld heat",
+          "solution": "Slow down so fill material has time to melt into the weld location. Increase current"
+        },
+        {
+          "cause": "Workpieces too thick/close",
+          "solution": "Bevel thick workpieces, allow slight gap, and weld in several passes"
+        },
+        {
+          "cause": "Insufficient weld material",
+          "solution": "Increase amount of fill material"
+        }
+      ]
+    },
+    {
+      "process": "Stick",
+      "issue": "Weld Not Adhering Properly",
+      "description": "Gaps present between weld and previous bead or between weld and workpiece.",
+      "causes_solutions": [
+        {
+          "cause": "Incorrect welding technique",
+          "solution": "Place stringer bead at correct place in joint. Adjust workpiece position or weld angle to permit proper welding to bottom of piece. Keep arc on leading edge of weld puddle. Hold Electrode and fill material at proper angles"
+        },
+        {
+          "cause": "Insufficient weld heat",
+          "solution": "Increase current"
+        },
+        {
+          "cause": "Dirty workpiece",
+          "solution": "Clean workpiece down to bare metal"
+        },
+        {
+          "cause": "Insufficient weld material",
+          "solution": "Increase amount of fill material"
+        },
+        {
+          "cause": "Distance between workpieces to large",
+          "solution": "Decrease distance and increase bevel"
+        }
+      ]
+    },
+    {
+      "process": "Stick",
+      "issue": "Bend at Joint",
+      "description": "Weld joint bends or distorts",
+      "causes_solutions": [
+        {
+          "cause": "Improper clamping",
+          "solution": "Clamp workpieces securely. Make tack welds to hold workpieces"
+        },
+        {
+          "cause": "Excessive heat",
+          "solution": "Weld a small portion and allow to cool before proceeding. Increase weld speed"
+        }
+      ]
+    },
+    {
+      "process": "Stick Weld",
+      "issue": "Coat of Slag Over Weld",
+      "description": "Slag is a necessary part of a stick weld. It shields the weld from impurities. Clean off the slag with the Chipping Hammer and Wire Brush after welding.",
+      "category": "Safety"
+    },
+    {
+      "process": "Stick Weld",
+      "issue": "Porosity",
+      "description": "Small cavities or holes in the bead.",
+      "causes_and_solutions": [
+        {
+          "cause": "Dirty workplace or fill material",
+          "solution": "Clean workplace down to bare metal. Make certain that fill material and Electrode are clean and free from oil, coatings, and other residues."
+        },
+        {
+          "cause": "Inconsistent welding speed",
+          "solution": "Maintain steady weld speed."
+        }
+      ],
+      "category": "Controls"
+    },
+    {
+      "process": "Stick Weld",
+      "issue": "Crooked/Wavy Bead",
+      "causes_and_solutions": [
+        {
+          "cause": "Inaccurate welding",
+          "solution": "Use two hands or rest hand on steady surface."
+        },
+        {
+          "cause": "Inconsistent welding speed",
+          "solution": "Maintain steady weld speed."
+        }
+      ],
+      "category": "Wire"
+    },
+    {
+      "process": "Stick Weld",
+      "issue": "Excessive Spatter",
+      "description": "Fine spatter is normal. Spatter that is grainy and large is a problem.",
+      "causes_and_solutions": [
+        {
+          "cause": "Dirty workplace or fill material",
+          "solution": "Clean workplace down to bare metal. Make certain that fill material and Electrode are clean and free from oil, coatings, and other residues."
+        }
+      ],
+      "category": "TIG Stick"
+    },
+    {
+      "process": "Stick Weld",
+      "issue": "Burn-Through",
+      "description": "Base material melts away, leaving a hole in the weld.",
+      "causes_and_solutions": [
+        {
+          "cause": "Workplace overheating",
+          "solution": "Reduce current."
+        },
+        {
+          "cause": "Welding speed too slow",
+          "solution": "Increase welding speed and ensure the welding speed is kept steady."
+        },
+        {
+          "cause": "Excessive material at weld",
+          "solution": "Reduce amount of fill material."
+        }
+      ],
+      "category": "Welding Tips"
+    },
+    {
+      "problem": "Wire Feed Motor Runs but Wire Does Not Feed Properly",
+      "causes": [
+        "Insufficient wire feed pressure",
+        "Incorrect wire feed roller size",
+        "Damaged MIG Gun, cable, or liner assembly",
+        "Feed Tensioner is too tight"
+      ],
+      "solutions": [
+        "Increase wire feed pressure properly. Follow step 27 on page 17",
+        "Flip roll to correct size. Follow the Feed Roller instructions on page 12",
+        "Have a qualified technician inspect these parts and replace as necessary",
+        "Loosen Feed Tensioner so it applies only enough pressure to prevent continued spinning after the Gun Trigger is released"
+      ]
+    },
+    {
+      "problem": "Wire Creates a Bird's Nest During Operation",
+      "causes": [
+        "Excess wire feed pressure",
+        "Incorrect Contact Tip size",
+        "MIG Gun Cable Connector not fully inserted into Wire Feed mechanism",
+        "Damaged liner"
+      ],
+      "solutions": [
+        "Adjust wire feed pressure properly. Follow step 27 on page 17",
+        "Replace with the proper tip for wire used",
+        "Insert Gun Cable Connector properly. Follow steps 13 and 14 on page 13",
+        "Have a qualified technician inspect and repair/replace as necessary"
+      ]
+    },
+    {
+      "problem": "Wire Stops During Welding",
+      "causes": [
+        "Gun cable is severely bent and Wire Feed mechanism cannot feed wire",
+        "Gun liner is clogged or worn",
+        "Gun liner is too small for welding wire being used",
+        "Wire is tangled on the spool",
+        "Wire is not making contact with Feed Rollers",
+        "Feed Roller is not making enough contact with wire or is crushing flux-cored wire"
+      ],
+      "solutions": [
+        "Straighten Gun cable",
+        "Check gun liner for obstruction. Replace if necessary",
+        "Check that gun liner is correct size for wire",
+        "Check wire for cross winding or tangled spool",
+        "Check Feed Rollers and ensure correct groove for wire diameter is being used",
+        "Check Feed Tensioner and ensure it is set properly"
+      ]
+    },
+    {
+      "problem": "Welding Arc Not Stable",
+      "causes": [
+        "Wire not feeding properly",
+        "Incorrect Contact Tip or liner size or excessive wear",
+        "Incorrect wire feed speed",
+        "Loose MIG Gun cable or ground cable",
+        "Damaged MIG Gun or loose connection within gun",
+        "Incorrect polarity for process being run",
+        "Gas coverage may be insufficient or too high",
+        "Poor connection with workpiece"
+      ],
+      "solutions": [
+        "See first Troubleshooting section above",
+        "Replace with the proper tip or liner size for wire used",
+        "Adjust wire feed speed to achieve a more stable arc",
+        "Check to ensure that all connections are tight",
+        "Have a qualified technician inspect and repair/replace as necessary",
+        "Ensure polarity is correct for operation: DCEP for MIG welding and DCEN for Flux-Cored self-shielded welding",
+        "Ensure gas flow rate is set according to Settings Chart. Make sure MIG Gun Cable Connector is fully inserted into Wire Feed mechanism with no O-Rings exposed",
+        "Check the ground clamp connection to the workpiece and machine. Ensure the MIG Gun is properly secured"
+      ]
+    },
+    {
+      "problem": "Weak Arc Strength",
+      "causes": [
+        "Incorrect line voltage",
+        "Improper gauge or length of cord",
+        "Not enough current"
+      ],
+      "solutions": [
+        "Check the line voltage and, if insufficient, have a licensed electrician remedy the situation",
+        "Do not use an extension cord on this Welder. Use only one of the supplied power cords for this Welder or an identical replacement cord",
+        "Switch current to proper setting for metal thickness"
+      ]
+    },
+    {
+      "problem": "Welder Does Not Function When Switched On",
+      "causes": [
+        "Tripped thermal protection device",
+        "Circuit supplies insufficient input voltage or amperage",
+        "Faulty or improperly connected Trigger",
+        "Machine is in low- or over-voltage protection",
+        "Machine is in the incorrect mode"
+      ],
+      "solutions": [
+        "If a warning screen appears in the LCD Display window, Welder may have overheated and shut down. Stop and wait with the Power Switch ON for the Welder to cool. The Welder automatically returns to service after cooling off. Reduce duration or frequency of welding periods to help reduce wear on the Welder. Refer to Duty Cycle (Duration of Use) on page 19",
+        "Verify that the circuit is designed to supply the required input voltage and amperage as detailed on the Specifications table. If a warning screen appears in the LCD Display window, check the input voltage to ensure it is within specified range",
+        "Ensure the gun connection is properly seated on machine. Qualified technician must check and repair/replace Trigger",
+        "Check input voltage and ensure it falls within the specified range. If input voltage is correct, press Reset Button on back of machine",
+        "Ensure the correct process has been selected"
+      ]
+    },
+    {
+      "problem": "LCD Display Does Not Light When Welder is Switched On",
+      "causes": [
+        "Unit is not connected to outlet properly",
+        "Outlet is unpowered",
+        "Plug does not have correct rating",
+        "Circuit breaker has tripped due to high input amperage",
+        "Input Power Cord is not seated properly"
+      ],
+      "solutions": [
+        "Verify the voltage at the outlet and the connection to the outlet",
+        "Check circuit breaker/GFCI devices; if any are tripped, determine and remedy cause before resetting",
+        "Make sure installed plug is correct rating. See Specifications on page 7",
+        "Press Reset Button on back of machine to reset circuit breaker",
+        "Ensure the twist lock input Power Cord is fully secured"
+      ]
+    },
+    {
+      "problem": "Wire Feeds, but Arc Does Not Ignite",
+      "causes": [
+        "Improper ground connection",
+        "Improperly sized Contact Tip",
+        "Excessively worn Contact Tip",
+        "Dirty Contact Tip"
+      ],
+      "solutions": [
+        "Make certain that the workpiece is contacted properly by the Ground Clamp and that the workpiece is properly cleaned near the ground clamp and the welding location",
+        "Verify that Contact Tip is the proper size for welding wire. If needed, replace Contact Tip with proper size and type",
+        "Check that the hole in the tip is not deformed or enlarged. If needed, replace Contact Tip with proper size and type",
+        "Properly clean Contact Tip"
+      ]
+    },
+    {
+      "problem": "Porosity in the Weld Metal",
+      "causes": [
+        "Shielding gas bottle is empty",
+        "Not enough or too much shielding gas",
+        "Dirty workpiece",
+        "Gun is being used too far away from workpiece",
+        "Polarity is incorrect for the application",
+        "Dirty welding wire is introducing contamination into the weld"
+      ],
+      "solutions": [
+        "Check gas bottle and replenish as necessary",
+        "Check gas flow regulator to ensure proper flow",
+        "Clean workpiece down to bare metal",
+        "Check CTWD (contact tip to work distance) for the proper procedure",
+        "Check the polarity and ensure it is DCEP for MIG and DCEN for Flux-Cored",
+        "Make certain that welding wire is clean and free of rust and residues"
+      ]
+    },
+    {
+      "problem": "Welder Does Not Function When Switched On",
+      "possible_causes": [
+        "Tripped thermal protection device",
+        "Faulty or improperly connected Trigger",
+        "Ground Clamp not attached to workpiece",
+        "Shielding Gas not connected"
+      ],
+      "likely_solutions": [
+        "Reduce duration or frequency of welding periods to help reduce wear on the welder. Refer to Duty Cycle (Duration of Use) on page 29",
+        "Qualified technician must check and secure/replace Trigger",
+        "Attach Ground Clamp to workpiece",
+        "Connect shielding gas to Welder"
+      ]
+    },
+    {
+      "problem": "LCD Display Does Not Light When Welder is Switched On",
+      "possible_causes": [
+        "Unit is not connected to outlet properly",
+        "Outlet is unpowered"
+      ],
+      "likely_solutions": [
+        "Verify the voltage at the outlet and the connection to the outlet",
+        "Check circuit breaker/GFCI devices; if any are tripped, determine and remedy cause before resetting. Verify that the circuit is designed to supply the required input amperage as detailed in Specifications on page 7"
+      ]
+    },
+    {
+      "problem": "Weak Arc Strength",
+      "possible_causes": [
+        "Incorrect line voltage",
+        "Improper gauge or length of cord"
+      ],
+      "likely_solutions": [
+        "Check the line voltage and, if insufficient, have a licensed electrician remedy the situation",
+        "Do not use an extension cord on this Welder. Use only one of the supplied power cords for this Welder or an identical replacement cord"
+      ]
+    },
+    {
+      "problem": "Welding Arc Not Stable",
+      "possible_causes": [
+        "Loose electrode cable or ground cable",
+        "Damaged electrode holder or loose connection within electrode holder",
+        "Adjust current setting",
+        "Shielding gas getting low"
+      ],
+      "likely_solutions": [
+        "Check to ensure that all connections are tight",
+        "Have a qualified technician inspect and repair/replace as necessary",
+        "Make sure setting matches recommended setting on chart",
+        "Replace shielding gas cylinder"
+      ]
+    },
+    {
+      "problem": "Porosity",
+      "causes": [
+        "Shielding gas issues (low flow, leaks, wind)",
+        "Dirty material surface (oil, rust, paint)",
+        "Arc length too long",
+        "Contaminated wire or electrode",
+        "Moisture on base metal"
+      ],
+      "fixes": [
+        "Check gas flow rate (25-35 CFH for MIG)",
+        "Clean work area thoroughly with acetone or wire brush",
+        "Reduce arc length",
+        "Replace contaminated consumables",
+        "Preheat damp material"
+      ]
+    },
+    {
+      "problem": "Spatter",
+      "causes": [
+        "Voltage too high",
+        "Wire speed too fast or slow",
+        "Long arc length",
+        "Wrong polarity",
+        "Contaminated base metal"
+      ],
+      "fixes": [
+        "Reduce voltage setting",
+        "Adjust wire speed to match voltage",
+        "Shorten arc length",
+        "Verify correct polarity (DCEP for MIG)",
+        "Clean base metal before welding"
+      ]
+    },
+    {
+      "problem": "Wire feed issues",
+      "causes": [
+        "Liner contamination or kink",
+        "Wire tension too tight or loose",
+        "Nozzle or contact tip clogged",
+        "Wrong liner size for wire diameter",
+        "Drive roll tension incorrect"
+      ],
+      "fixes": [
+        "Replace or clean liner",
+        "Adjust drive roll tension - wire should slip under heavy load",
+        "Replace contact tip and clean nozzle",
+        "Match liner to wire size",
+        "Adjust tension: too tight causes shaving, too loose causes slipping"
+      ]
+    },
+    {
+      "problem": "Undercut",
+      "causes": [
+        "Travel speed too fast",
+        "Voltage too high",
+        "Improper torch angle",
+        "Arc length too long"
+      ],
+      "fixes": [
+        "Slow down travel speed",
+        "Reduce voltage",
+        "Angle torch 10-15 degrees in direction of travel",
+        "Maintain shorter arc length"
+      ]
+    },
+    {
+      "problem": "Burn-through",
+      "causes": [
+        "Amperage/heat too high",
+        "Travel speed too slow",
+        "Material too thin for settings",
+        "Gap between parts too large"
+      ],
+      "fixes": [
+        "Reduce amperage/wire speed",
+        "Increase travel speed",
+        "Use lower voltage setting or switch to 120V input",
+        "Reduce gap or use backing material"
+      ]
+    },
+    {
+      "problem": "No arc or arc won't start",
+      "causes": [
+        "Poor ground clamp connection",
+        "Wrong polarity setting",
+        "Electrode or wire not making contact",
+        "Blown fuse or tripped breaker",
+        "Duty cycle thermal protection active"
+      ],
+      "fixes": [
+        "Clean and clamp ground firmly to bare metal",
+        "Check polarity matches process (DCEP for MIG, DCEN for TIG)",
+        "Trim wire or replace electrode",
+        "Check input power and reset breaker",
+        "Wait for machine to cool down"
+      ]
+    },
+    {
+      "problem": "Unstable arc or arc wander",
+      "causes": [
+        "Dirty or oxidized base metal",
+        "Incorrect shielding gas or flow rate",
+        "Worn contact tip",
+        "Wind or drafts disturbing gas coverage",
+        "Loose connections"
+      ],
+      "fixes": [
+        "Clean base metal to bright metal",
+        "Verify correct gas and flow rate",
+        "Replace contact tip",
+        "Use wind screens or move to sheltered area",
+        "Tighten all cable connections"
+      ]
+    },
+    {
+      "problem": "Excessive penetration",
+      "causes": [
+        "Amperage too high",
+        "Travel speed too slow",
+        "Root gap too wide"
+      ],
+      "fixes": [
+        "Reduce amperage",
+        "Increase travel speed",
+        "Adjust fit-up to reduce gap"
+      ]
+    },
+    {
+      "problem": "Lack of fusion or cold lap",
+      "causes": [
+        "Amperage/voltage too low",
+        "Travel speed too fast",
+        "Improper joint preparation",
+        "Wrong torch angle"
+      ],
+      "fixes": [
+        "Increase voltage and wire speed",
+        "Slow travel speed",
+        "Ensure proper bevel and fit-up",
+        "Direct arc into joint root"
+      ]
+    },
+    {
+      "problem": "Cracking",
+      "causes": [
+        "Cooling too rapidly",
+        "High carbon or alloy content in base metal",
+        "Hydrogen embrittlement from moisture",
+        "Excessive restraint on joint"
+      ],
+      "fixes": [
+        "Preheat base metal (especially thick sections)",
+        "Use low-hydrogen electrodes",
+        "Ensure dry consumables and clean surface",
+        "Allow for thermal expansion during cooling"
+      ]
+    }
+  ],
+  "extracted_at": "auto+defaults"
+}
