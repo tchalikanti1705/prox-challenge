@@ -1,5 +1,7 @@
 # Vulcan OmniPro 220 — Multimodal Expert Agent
 
+> **Live Demo:** [https://prox-challenge-production.up.railway.app/](https://prox-challenge-production.up.railway.app/)
+
 An AI-powered technical advisor for the Vulcan OmniPro 220 multiprocess welding system. Ask it anything about setup, polarity, duty cycles, troubleshooting — and it answers with **generated diagrams, interactive calculators, and manual images**, not just text.
 
 <img src="product.webp" alt="Vulcan OmniPro 220" width="380" /> <img src="product-inside.webp" alt="Vulcan OmniPro 220 — inside panel" width="380" />
@@ -39,6 +41,8 @@ cd backend && python app.py   # Server starts on http://localhost:8000
 ```
 
 Open **http://localhost:8000** in your browser. That's it.
+
+Or try the live deployment: **https://prox-challenge-production.up.railway.app/**
 
 > **Requirements:** Python 3.10+, Anthropic API key  
 > **Optional:** `OPENAI_API_KEY` in `.env` for OpenAI embeddings (auto-detected)  
