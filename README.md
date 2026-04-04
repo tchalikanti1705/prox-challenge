@@ -89,6 +89,8 @@ The agent:
 
 ## System Architecture
 
+<img src="01-system-architecture.png" alt="System Architecture" width="800" />
+
 ### High-Level Overview
 
 ```
@@ -178,6 +180,8 @@ The agent:
 ---
 
 ## Request Flow
+
+<img src="02-request-flow.png" alt="Request Flow" width="700" />
 
 ### Complete Request Lifecycle
 
@@ -280,6 +284,8 @@ User: "Show me TIG polarity and a wiring diagram"
 ---
 
 ## Knowledge Extraction Pipeline
+
+<img src="03-extraction-pipeline.png" alt="Extraction Pipeline" width="800" />
 
 One-time pipeline that transforms raw PDFs into queryable JSON.
 
@@ -882,8 +888,7 @@ prox-challenge/
 ├── railway.json                     # Railway PaaS config (healthcheck, restart policy)
 ├── requirements.txt                 # All Python deps (pinned versions)
 ├── run.py                           # Development convenience launcher
-├── .env.example                     # Template: ANTHROPIC_API_KEY=your-key-here
-└── test_sdk.py                      # SDK integration tests
+└── .env.example                     # Template: ANTHROPIC_API_KEY=your-key-here
 ```
 
 ---
