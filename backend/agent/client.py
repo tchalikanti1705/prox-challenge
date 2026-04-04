@@ -89,11 +89,22 @@ def _build_messages(
     if images:
         content_blocks = []
         for img_b64 in images:
+            # Auto-detect media type from base64 magic bytes
+            if img_b64.startswith("iVBOR"):
+                media_type = "image/png"
+            elif img_b64.startswith("/9j/"):
+                media_type = "image/jpeg"
+            elif img_b64.startswith("UklGR"):
+                media_type = "image/webp"
+            elif img_b64.startswith("R0lGO"):
+                media_type = "image/gif"
+            else:
+                media_type = "image/png"
             content_blocks.append({
                 "type": "image",
                 "source": {
                     "type": "base64",
-                    "media_type": "image/png",
+                    "media_type": media_type,
                     "data": img_b64,
                 },
             })

@@ -832,15 +832,18 @@
 
         function saveAllChats(chats) {
             // Strip base64 image data from history to avoid localStorage bloat
+            // Also filter out empty assistant messages
             const lite = {};
             for (const [id, chat] of Object.entries(chats)) {
                 lite[id] = {
                     ...chat,
-                    messages: chat.messages.map(m => ({
-                        role: m.role,
-                        content: m.content,
-                        imageCount: m.images ? m.images.length : (m.image ? 1 : 0)
-                    }))
+                    messages: chat.messages
+                        .filter(m => m.role !== 'assistant' || (m.content && m.content.trim()))
+                        .map(m => ({
+                            role: m.role,
+                            content: m.content,
+                            imageCount: m.images ? m.images.length : (m.image ? 1 : 0)
+                        }))
                 };
             }
             try { localStorage.setItem(STORAGE_KEY, JSON.stringify(lite)); } catch {}
@@ -876,7 +879,10 @@
             if (!chat) return;
 
             activeChatId = chatId;
-            conversationHistory = chat.messages || [];
+            // Filter out empty assistant messages from stored history
+            conversationHistory = (chat.messages || []).filter(
+                msg => msg.role !== 'assistant' || (msg.content && msg.content.trim())
+            );
             imageCount = chat.imageCount || 0;
             clearImages();
             localStorage.setItem('omnipro_active_chat', chatId);
@@ -903,7 +909,7 @@
             for (const msg of conversationHistory) {
                 if (msg.role === 'user') {
                     addMessage('user', msg.content, null, msg.imageCount || 0);
-                } else if (msg.role === 'assistant') {
+                } else if (msg.role === 'assistant' && msg.content && msg.content.trim()) {
                     // Create assistant message with artifact rendering
                     const msgDiv = document.createElement('div');
                     msgDiv.className = 'message assistant';
@@ -1265,15 +1271,19 @@
             sendBtn.classList.add('stop-btn');
             sendBtn.onclick = stopGeneration;
 
-            // Stream response
-            await streamResponse();
-
-            // Restore Send button
-            isLoading = false;
-            sendBtn.textContent = 'Send';
-            sendBtn.classList.remove('stop-btn');
-            sendBtn.onclick = sendMessage;
-            sendBtn.disabled = false;
+            try {
+                // Stream response
+                await streamResponse();
+            } catch (e) {
+                console.error('sendMessage error:', e);
+            } finally {
+                // Always restore Send button, even if streamResponse crashes
+                isLoading = false;
+                sendBtn.textContent = 'Send';
+                sendBtn.classList.remove('stop-btn');
+                sendBtn.onclick = sendMessage;
+                sendBtn.disabled = false;
+            }
         }
 
         // Stop generation
@@ -1288,11 +1298,22 @@
         async function streamResponse() {
             abortController = new AbortController();
             try {
+                // Filter out empty assistant messages before sending
+                const cleanMessages = conversationHistory.filter(
+                    msg => msg.role !== 'assistant' || (msg.content && msg.content.trim())
+                ).map((msg, idx, arr) => {
+                    // Only keep images on the last user message to avoid bloated payloads
+                    if (msg.images && idx < arr.length - 1) {
+                        const { images, ...rest } = msg;
+                        return rest;
+                    }
+                    return msg;
+                });
                 const response = await fetch(`${API_BASE}/chat`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     signal: abortController.signal,
-                    body: JSON.stringify({ messages: conversationHistory })
+                    body: JSON.stringify({ messages: cleanMessages })
                 });
 
                 if (!response.ok) {
@@ -1381,11 +1402,13 @@
                     renderContent(contentDiv, fullContent);
                 }
 
-                // Add to history
-                conversationHistory.push({
-                    role: 'assistant',
-                    content: fullContent
-                });
+                // Add to history (skip empty responses)
+                if (fullContent) {
+                    conversationHistory.push({
+                        role: 'assistant',
+                        content: fullContent
+                    });
+                }
 
                 // Persist chat
                 saveCurrentChat();
