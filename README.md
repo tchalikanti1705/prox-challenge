@@ -2,6 +2,10 @@
 
 > **Live Demo:** [https://prox-challenge-production.up.railway.app/](https://prox-challenge-production.up.railway.app/)
 
+> **System Architecture:** [View Diagram](https://drive.google.com/file/d/1RiQSjZqgnH9JR3EeIrrYQnL0ClblThQP/view?usp=drive_link)
+> **Request Flow:** [View Diagram](https://drive.google.com/file/d/12rdMbODEXO5yUs8My3sJPM1B5TyNzMFx/view?usp=drive_link)
+> **Extraction Pipeline:** [View Diagram](https://drive.google.com/file/d/1TcB7Yu6pheDZOT50U-naaoekpDnJ1K5_/view?usp=drive_link)
+
 An AI-powered technical advisor for the Vulcan OmniPro 220 multiprocess welding system. Ask it anything about setup, polarity, duty cycles, troubleshooting — and it answers with **generated diagrams, interactive calculators, and manual images**, not just text.
 
 <img src="product.webp" alt="Vulcan OmniPro 220" width="380" /> <img src="product-inside.webp" alt="Vulcan OmniPro 220 — inside panel" width="380" />
@@ -21,6 +25,7 @@ An AI-powered technical advisor for the Vulcan OmniPro 220 multiprocess welding 
 - [Docker & Deployment](#docker--deployment)
 - [Tool System](#tool-system)
 - [Artifact Rendering Pipeline](#artifact-rendering-pipeline)
+- [Frontend & UI](#frontend--ui)
 - [Context Management](#context-management)
 - [Design Decisions](#design-decisions)
 - [Project Structure](#project-structure)
@@ -765,6 +770,65 @@ Incomplete artifacts show a "Loading artifact..." placeholder. The frontend buff
 
 ---
 
+## Frontend & UI
+
+### Claude-Themed Design System
+
+The frontend uses a custom warm-toned design system inspired by Claude's visual identity. All colors are driven by CSS custom properties for consistency:
+
+| Variable | Value | Usage |
+|----------|-------|-------|
+| `--claude-bg` | `#FAF9F6` | Page background (warm white) |
+| `--claude-sidebar` | `#EEEAE2` | Sidebar background |
+| `--claude-accent` | `#D97757` | Buttons, badges, active elements |
+| `--claude-user-bubble` | `#D97757` | User message bubbles |
+| `--claude-assistant-bg` | `#FFFFFF` | Assistant message cards |
+| `--claude-text` | `#2D2B28` | Primary text |
+| `--claude-border` | `#E0DAD0` | Subtle border lines |
+
+**Typography:** Times New Roman serif for headings (sidebar brand, welcome title), Inter sans-serif for body text. The contrast between serif headings and sans-serif body creates clear visual hierarchy.
+
+**Glassmorphism navbar:** The chat header uses `backdrop-filter: blur(20px)` with a semi-transparent background, creating a frosted glass effect as chat content scrolls underneath.
+
+### Follow-Up Question Suggestions
+
+After each assistant response, 2–3 contextually relevant follow-up questions appear as clickable chips below the message. This is driven entirely by the system prompt — Claude generates a `<followups>` tag at the end of each response:
+
+```
+<followups>
+What settings should I use for thin sheet metal?
+How do I switch between MIG and TIG modes?
+</followups>
+```
+
+The frontend:
+1. **During streaming:** Strips the `<followups>` tag from displayed text so it never shows as raw markup
+2. **On stream completion:** Parses the tag and renders each suggestion as a `.followup-chip` button
+3. **On chip click:** Sends the text as a new user message (`sendFollowup()`)
+
+### Regenerate Response
+
+A ↻ "Regenerate" button appears below every completed assistant message. Clicking it:
+1. Removes the last assistant message from the conversation history
+2. Re-sends the same user message to the API
+3. Streams a fresh response in place
+
+The button is only rendered when `isFinal=true` in `renderContent()`, so it doesn't blink during streaming token updates.
+
+### Input Bar Design
+
+The input area features:
+- **Borderless text field** with placeholder text and clean white background
+- **Inline microphone icon** (SVG) inside the input field for voice input via Web Speech API
+- **Circular send button** with an arrow SVG icon, colored in `--claude-accent`
+- Auto-resizing textarea that grows with content (max 200px height)
+
+### Chat History (localStorage)
+
+Conversations are persisted in the browser's `localStorage`. The sidebar lists all past chats, sorted by most recent. Each chat stores its full message array. Users can create new chats, switch between them, or delete old ones — no backend persistence required.
+
+---
+
 ## Context Management
 
 ### Conversation Window Trimming
@@ -816,7 +880,7 @@ The Claude Agent SDK wraps Claude Code's CLI — designed for code-editing agent
 
 ### Why a single HTML file for the frontend?
 
-The challenge says "we should be running your agent within 2 minutes." A React/Next.js app adds `npm install` (30+ seconds) and a build step. A single HTML file with inline CSS/JS: opens instantly from FastAPI's static file serving, zero build configuration, still supports artifact rendering, voice I/O, image upload, chat history, streaming, and fullscreen modal with zoom.
+The challenge says "we should be running your agent within 2 minutes." A React/Next.js app adds `npm install` (30+ seconds) and a build step. A single HTML file with inline CSS/JS: opens instantly from FastAPI's static file serving, zero build configuration, still supports artifact rendering, voice I/O, image upload, chat history, streaming, follow-up suggestion chips, regenerate responses, and fullscreen modal with zoom — all in a Claude-themed responsive UI.
 
 ### Why pre-extracted knowledge (not runtime RAG)?
 
@@ -968,7 +1032,7 @@ curl http://localhost:8000/api/health | python -m json.tool
 |-----------|-----------|-----|
 | LLM | Claude Opus 4 (`claude-opus-4-20250514`) | Best reasoning + tool use + vision + artifact generation |
 | Backend | FastAPI + Uvicorn (async) | Non-blocking SSE streaming, zero boilerplate |
-| Frontend | Vanilla HTML/CSS/JS | Zero build step, instant setup |
+| Frontend | Vanilla HTML/CSS/JS | Zero build step, instant setup, Claude-themed design |
 | PDF processing | PyMuPDF (fitz) | Fast, reliable text + image extraction |
 | Table extraction | Claude Vision API | Reads complex tables that exist only as images |
 | Search | Hybrid: TF-IDF/OpenAI + BM25 + structured | Handles semantic, keyword, and structured queries |
