@@ -6,6 +6,8 @@
 > **Request Flow:** [View Diagram](https://drive.google.com/file/d/12rdMbODEXO5yUs8My3sJPM1B5TyNzMFx/view?usp=drive_link)
 > **Extraction Pipeline:** [View Diagram](https://drive.google.com/file/d/1TcB7Yu6pheDZOT50U-naaoekpDnJ1K5_/view?usp=drive_link)
 
+> **Demo Video:** [view Video](https://drive.google.com/file/d/1NoxmYBqz65pPd8SPlMDyeM4nIwpG2YEH/view?usp=sharing)
+
 An AI-powered technical advisor for the Vulcan OmniPro 220 multiprocess welding system. Ask it anything about setup, polarity, duty cycles, troubleshooting — and it answers with **generated diagrams, interactive calculators, and manual images**, not just text.
 
 <img src="product.webp" alt="Vulcan OmniPro 220" width="380" /> <img src="product-inside.webp" alt="Vulcan OmniPro 220 — inside panel" width="380" />
