@@ -532,23 +532,32 @@
 
         .input-box {
             display: flex;
-            gap: 8px;
+            gap: 10px;
+            align-items: flex-end;
+            position: relative;
+        }
+
+        .input-field-wrapper {
+            flex: 1;
+            position: relative;
+            display: flex;
             align-items: flex-end;
         }
 
         #messageInput {
             flex: 1;
             background: var(--claude-input-bg);
-            border: 2px solid var(--claude-border);
+            border: none;
             color: var(--claude-text);
-            padding: 12px 16px;
+            padding: 12px 48px 12px 16px;
             border-radius: 16px;
             font-size: 14px;
             font-family: inherit;
             resize: none;
             max-height: 100px;
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 1px 4px var(--claude-shadow);
+            box-shadow: 0 1px 3px var(--claude-shadow);
+            width: 100%;
         }
 
         #messageInput::placeholder {
@@ -557,16 +566,17 @@
 
         #messageInput:focus {
             outline: none;
-            border-color: var(--claude-accent);
-            box-shadow: 0 0 0 3px var(--claude-accent-light), 0 2px 8px var(--claude-shadow);
+            box-shadow: 0 1px 4px var(--claude-shadow);
         }
 
         .send-btn {
             background: var(--claude-accent);
             color: white;
             border: none;
-            border-radius: 14px;
-            padding: 12px 22px;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            padding: 0;
             cursor: pointer;
             font-weight: 600;
             font-size: 14px;
@@ -576,6 +586,10 @@
             box-shadow: 0 2px 8px var(--claude-accent-glow);
             position: relative;
             overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
         }
 
         .send-btn::after {
@@ -711,20 +725,32 @@
 
         /* ===== Voice Controls ===== */
         .voice-btn {
-            padding: 8px 14px;
-            background: var(--claude-input-bg);
-            border: 1px solid var(--claude-border);
-            border-radius: 12px;
+            position: absolute;
+            right: 8px;
+            bottom: 8px;
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            background: transparent;
+            border: none;
+            border-radius: 50%;
             cursor: pointer;
-            font-size: 16px;
             color: var(--claude-text-muted);
             transition: all 0.2s;
-            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .voice-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
         }
 
         .voice-btn:hover {
-            border-color: var(--claude-accent);
             color: var(--claude-accent);
+            background: var(--claude-accent-light);
         }
 
         .voice-btn.recording {
@@ -1028,6 +1054,67 @@
         .welcome-item strong {
             color: var(--claude-accent);
         }
+
+        /* ===== Follow-up Suggestion Chips ===== */
+        .followup-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid var(--claude-border-light);
+            animation: chipsSlide 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+        }
+
+        @keyframes chipsSlide {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .followup-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            background: var(--claude-bg);
+            border: 1px solid var(--claude-border);
+            border-radius: 20px;
+            font-size: 13px;
+            color: var(--claude-text-secondary);
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            line-height: 1.3;
+        }
+
+        .followup-chip:hover {
+            background: var(--claude-accent-light);
+            border-color: var(--claude-accent);
+            color: var(--claude-accent);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px var(--claude-shadow);
+        }
+
+        .followup-chip:active {
+            transform: translateY(0);
+        }
+
+        .followup-chip::before {
+            content: '→';
+            font-size: 12px;
+            opacity: 0.5;
+            transition: opacity 0.2s;
+        }
+
+        .followup-chip:hover::before {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -1092,16 +1179,22 @@
                 <div class="input-wrapper">
                     <div id="imagePreviewArea"></div>
                     <div class="input-box">
-                        <textarea 
-                            id="messageInput" 
-                            placeholder="Ask me about duty cycles, polarity, troubleshooting, or anything else..."
-                            rows="1"
-                            maxlength="1000"
-                            onkeydown="handleKeydown(event)"
-                            oninput="updateCharCounter()"
-                        ></textarea>
-                        <button class="voice-btn" id="voiceBtn" onclick="toggleVoiceInput()" title="Voice input (speech-to-text)">🎤</button>
-                        <button class="send-btn" id="sendBtn" onclick="sendMessage()">Send</button>
+                        <div class="input-field-wrapper">
+                            <textarea 
+                                id="messageInput" 
+                                placeholder="Ask me about duty cycles, polarity, troubleshooting, or anything else..."
+                                rows="1"
+                                maxlength="1000"
+                                onkeydown="handleKeydown(event)"
+                                oninput="updateCharCounter()"
+                            ></textarea>
+                            <button class="voice-btn" id="voiceBtn" onclick="toggleVoiceInput()" title="Voice input (speech-to-text)">
+                                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm-1-9c0-.55.45-1 1-1s1 .45 1 1v6c0 .55-.45 1-1 1s-1-.45-1-1V5z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
+                            </button>
+                        </div>
+                        <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.478 2.405a.75.75 0 00-.926.94l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94l18.04-8.01a.75.75 0 000-1.37L3.478 2.405z" fill="currentColor"/></svg>
+                        </button>
                     </div>
                     <div class="input-controls">
                         <label class="image-upload" id="imageUploadLabel">
@@ -1377,7 +1470,7 @@
                     return;
                 }
                 document.getElementById('voiceBtn').classList.remove('recording');
-                document.getElementById('voiceBtn').textContent = '🎤';
+                document.getElementById('voiceBtn').innerHTML = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm-1-9c0-.55.45-1 1-1s1 .45 1 1v6c0 .55-.45 1-1 1s-1-.45-1-1V5z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>';
                 document.getElementById('messageInput').focus();
             };
 
@@ -1385,7 +1478,7 @@
                 console.error('Speech error:', event.error);
                 isRecording = false;
                 document.getElementById('voiceBtn').classList.remove('recording');
-                document.getElementById('voiceBtn').textContent = '🎤';
+                document.getElementById('voiceBtn').innerHTML = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm-1-9c0-.55.45-1 1-1s1 .45 1 1v6c0 .55-.45 1-1 1s-1-.45-1-1V5z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>';
             };
         }
 
@@ -1399,7 +1492,7 @@
                 isRecording = true;
                 recognition.start();
                 document.getElementById('voiceBtn').classList.add('recording');
-                document.getElementById('voiceBtn').textContent = '⏹️';
+                document.getElementById('voiceBtn').innerHTML = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>';
             }
         }
 
@@ -1592,7 +1685,7 @@
             // Show loading state — swap Send for Stop
             isLoading = true;
             const sendBtn = document.getElementById('sendBtn');
-            sendBtn.textContent = 'Stop';
+            sendBtn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>';
             sendBtn.classList.add('stop-btn');
             sendBtn.onclick = stopGeneration;
 
@@ -1604,7 +1697,7 @@
             } finally {
                 // Always restore Send button, even if streamResponse crashes
                 isLoading = false;
-                sendBtn.textContent = 'Send';
+                sendBtn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.478 2.405a.75.75 0 00-.926.94l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94l18.04-8.01a.75.75 0 000-1.37L3.478 2.405z" fill="currentColor"/></svg>';
                 sendBtn.classList.remove('stop-btn');
                 sendBtn.onclick = sendMessage;
                 sendBtn.disabled = false;
@@ -1759,8 +1852,16 @@
             }
         }
 
-        // Render while streaming — show text but replace incomplete artifacts with placeholders
+        // Render while streaming — show text but replace incomplete artifacts/followups with placeholders
         function renderStreaming(container, content) {
+            // Strip any incomplete or complete <followups> during streaming (will render on final)
+            let displayContent = content.replace(/<followups>[\s\S]*?<\/followups>/g, '');
+            // Also hide incomplete followups tag being streamed
+            const incompleteFollowup = displayContent.indexOf('<followups>');
+            if (incompleteFollowup !== -1) {
+                displayContent = displayContent.slice(0, incompleteFollowup);
+            }
+
             // Check if we're inside an incomplete artifact (opened but not closed)
             const openTag = /<artifact\s+type="([^"]*)"(?:\s+title="([^"]*)")?[^>]*>/g;
             const closeTag = /<\/artifact>/g;
@@ -1769,19 +1870,22 @@
             let m;
             let lastOpenIdx = -1;
             let lastTitle = '';
-            while ((m = openTag.exec(content)) !== null) { opens++; lastOpenIdx = m.index; lastTitle = m[2] || 'visual'; }
-            while ((m = closeTag.exec(content)) !== null) { closes++; }
+            while ((m = openTag.exec(displayContent)) !== null) { opens++; lastOpenIdx = m.index; lastTitle = m[2] || 'visual'; }
+            while ((m = closeTag.exec(displayContent)) !== null) { closes++; }
 
             const insideArtifact = opens > closes;
 
             if (insideArtifact) {
-                // Show text before the incomplete artifact + a loading placeholder
-                const safePart = content.slice(0, lastOpenIdx);
+                // Show text + completed artifacts before the incomplete one, then a placeholder
+                const safePart = displayContent.slice(0, lastOpenIdx);
                 container.innerHTML = '';
+                // Use renderContent for the safe part so completed artifacts render properly
                 if (safePart.trim()) {
-                    const textDiv = document.createElement('div');
-                    textDiv.innerHTML = marked(safePart);
-                    container.appendChild(textDiv);
+                    const tempDiv = document.createElement('div');
+                    renderContent(tempDiv, safePart);
+                    while (tempDiv.firstChild) {
+                        container.appendChild(tempDiv.firstChild);
+                    }
                 }
                 const placeholder = document.createElement('div');
                 placeholder.className = 'artifact-loading';
@@ -1789,15 +1893,27 @@
                 container.appendChild(placeholder);
             } else {
                 // No incomplete artifact — render everything including completed artifacts
-                renderContent(container, content);
+                // But don't render followup chips during streaming
+                renderContent(container, displayContent);
             }
         }
 
         // Render content with artifact support (only called with complete artifacts)
         function renderContent(container, content) {
+            // Extract follow-up suggestions before other parsing
+            let followups = [];
+            const followupRegex = /<followups>([\s\S]*?)<\/followups>/g;
+            let fMatch;
+            let cleanContent = content;
+            while ((fMatch = followupRegex.exec(content)) !== null) {
+                const lines = fMatch[1].trim().split('\n').map(l => l.trim()).filter(l => l.length > 0);
+                followups = followups.concat(lines);
+                cleanContent = cleanContent.replace(fMatch[0], '');
+            }
+
             // Extract artifacts and text
             const artifacts = [];
-            let textContent = content;
+            let textContent = cleanContent;
 
             // Find artifacts in format: <artifact type="..." title="...">content</artifact>
             const artifactRegex = /<artifact type="([^"]*)" title="([^"]*)"[^>]*>([\s\S]*?)<\/artifact>/g;
@@ -1809,12 +1925,12 @@
             let lastIndex = 0;
             const parts = [];
 
-            while ((match = artifactRegex.exec(content)) !== null) {
+            while ((match = artifactRegex.exec(cleanContent)) !== null) {
                 // Add text before artifact
                 if (match.index > lastIndex) {
                     parts.push({
                         type: 'text',
-                        content: content.slice(lastIndex, match.index)
+                        content: cleanContent.slice(lastIndex, match.index)
                     });
                 }
 
@@ -1830,10 +1946,10 @@
             }
 
             // Add remaining text
-            if (lastIndex < content.length) {
+            if (lastIndex < cleanContent.length) {
                 parts.push({
                     type: 'text',
-                    content: content.slice(lastIndex)
+                    content: cleanContent.slice(lastIndex)
                 });
             }
 
@@ -1849,6 +1965,27 @@
                     renderArtifact(container, part.artifactType, part.title, part.content);
                 }
             }
+
+            // Render follow-up suggestion chips
+            if (followups.length > 0) {
+                const chipContainer = document.createElement('div');
+                chipContainer.className = 'followup-container';
+                followups.forEach(q => {
+                    const chip = document.createElement('button');
+                    chip.className = 'followup-chip';
+                    chip.textContent = q;
+                    chip.onclick = () => sendFollowup(q);
+                    chipContainer.appendChild(chip);
+                });
+                container.appendChild(chipContainer);
+            }
+        }
+
+        // Send a follow-up suggestion as the user's next message
+        function sendFollowup(question) {
+            if (isLoading) return;
+            document.getElementById('messageInput').value = question;
+            sendMessage();
         }
 
         // Render artifact
