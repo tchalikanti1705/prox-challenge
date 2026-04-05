@@ -1115,6 +1115,47 @@
         .followup-chip:hover::before {
             opacity: 1;
         }
+
+        /* ===== Regenerate Button ===== */
+        .regenerate-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 6px;
+            animation: chipsSlide 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+        }
+
+        .regenerate-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: transparent;
+            border: 1px solid var(--claude-border);
+            border-radius: 8px;
+            font-size: 12px;
+            color: var(--claude-text-muted);
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .regenerate-btn svg {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+            transition: transform 0.3s;
+        }
+
+        .regenerate-btn:hover {
+            color: var(--claude-accent);
+            border-color: var(--claude-accent);
+            background: var(--claude-accent-light);
+        }
+
+        .regenerate-btn:hover svg {
+            transform: rotate(-180deg);
+        }
     </style>
 </head>
 <body>
@@ -1321,7 +1362,7 @@
                     msgDiv.className = 'message assistant';
                     const contentDiv = document.createElement('div');
                     contentDiv.className = 'message-content';
-                    renderContent(contentDiv, msg.content);
+                    renderContent(contentDiv, msg.content, true);
                     msgDiv.appendChild(contentDiv);
                     messagesArea.appendChild(msgDiv);
                 }
@@ -1817,7 +1858,7 @@
 
                 // Final render — full content with completed artifacts
                 if (fullContent) {
-                    renderContent(contentDiv, fullContent);
+                    renderContent(contentDiv, fullContent, true);
                 }
 
                 // Add to history (skip empty responses)
@@ -1882,7 +1923,7 @@
                 // Use renderContent for the safe part so completed artifacts render properly
                 if (safePart.trim()) {
                     const tempDiv = document.createElement('div');
-                    renderContent(tempDiv, safePart);
+                    renderContent(tempDiv, safePart, false);
                     while (tempDiv.firstChild) {
                         container.appendChild(tempDiv.firstChild);
                     }
@@ -1894,12 +1935,12 @@
             } else {
                 // No incomplete artifact — render everything including completed artifacts
                 // But don't render followup chips during streaming
-                renderContent(container, displayContent);
+                renderContent(container, displayContent, false);
             }
         }
 
         // Render content with artifact support (only called with complete artifacts)
-        function renderContent(container, content) {
+        function renderContent(container, content, isFinal) {
             // Extract follow-up suggestions before other parsing
             let followups = [];
             const followupRegex = /<followups>([\s\S]*?)<\/followups>/g;
@@ -1967,7 +2008,17 @@
             }
 
             // Render follow-up suggestion chips
-            if (followups.length > 0) {
+            if (isFinal && followups.length > 0) {
+                // Add regenerate button before followups
+                const regenRow = document.createElement('div');
+                regenRow.className = 'regenerate-row';
+                const regenBtn = document.createElement('button');
+                regenBtn.className = 'regenerate-btn';
+                regenBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M17.65 6.35A7.958 7.958 0 0012 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0112 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg> Regenerate';
+                regenBtn.onclick = () => regenerateResponse();
+                regenRow.appendChild(regenBtn);
+                container.appendChild(regenRow);
+
                 const chipContainer = document.createElement('div');
                 chipContainer.className = 'followup-container';
                 followups.forEach(q => {
@@ -1978,6 +2029,16 @@
                     chipContainer.appendChild(chip);
                 });
                 container.appendChild(chipContainer);
+            } else if (isFinal) {
+                // No followups — still show regenerate
+                const regenRow = document.createElement('div');
+                regenRow.className = 'regenerate-row';
+                const regenBtn = document.createElement('button');
+                regenBtn.className = 'regenerate-btn';
+                regenBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M17.65 6.35A7.958 7.958 0 0012 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0112 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg> Regenerate';
+                regenBtn.onclick = () => regenerateResponse();
+                regenRow.appendChild(regenBtn);
+                container.appendChild(regenRow);
             }
         }
 
@@ -1986,6 +2047,38 @@
             if (isLoading) return;
             document.getElementById('messageInput').value = question;
             sendMessage();
+        }
+
+        // Regenerate the last assistant response
+        function regenerateResponse() {
+            if (isLoading) return;
+            // Remove the last assistant message from history
+            if (conversationHistory.length > 0 && conversationHistory[conversationHistory.length - 1].role === 'assistant') {
+                conversationHistory.pop();
+            }
+            // Remove the last assistant message bubble from the DOM
+            const messagesArea = document.getElementById('messagesArea');
+            const allMessages = messagesArea.querySelectorAll('.message.assistant');
+            if (allMessages.length > 0) {
+                allMessages[allMessages.length - 1].remove();
+            }
+
+            // Show loading and re-stream
+            isLoading = true;
+            const sendBtn = document.getElementById('sendBtn');
+            sendBtn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>';
+            sendBtn.classList.add('stop-btn');
+            sendBtn.onclick = stopGeneration;
+
+            streamResponse().catch(e => {
+                console.error('Regenerate error:', e);
+            }).finally(() => {
+                isLoading = false;
+                sendBtn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.478 2.405a.75.75 0 00-.926.94l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94l18.04-8.01a.75.75 0 000-1.37L3.478 2.405z" fill="currentColor"/></svg>';
+                sendBtn.classList.remove('stop-btn');
+                sendBtn.onclick = sendMessage;
+                sendBtn.disabled = false;
+            });
         }
 
         // Render artifact
