@@ -4,7 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vulcan OmniPro 220 Expert</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --claude-bg: #FAF9F6;
+            --claude-bg-alt: #F5F0E8;
+            --claude-sidebar: #EEEAE2;
+            --claude-sidebar-hover: #E5DFD5;
+            --claude-accent: #D97757;
+            --claude-accent-hover: #C4623F;
+            --claude-accent-light: rgba(217, 119, 87, 0.12);
+            --claude-accent-glow: rgba(217, 119, 87, 0.25);
+            --claude-text: #2D2B28;
+            --claude-text-secondary: #6B6560;
+            --claude-text-muted: #9B9590;
+            --claude-border: #E0DAD0;
+            --claude-border-light: #EDE8E0;
+            --claude-user-bubble: #D97757;
+            --claude-assistant-bg: #FFFFFF;
+            --claude-input-bg: #FFFFFF;
+            --claude-shadow: rgba(45, 43, 40, 0.08);
+            --claude-shadow-md: rgba(45, 43, 40, 0.12);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -12,9 +36,9 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background: #000000;
-            color: #e0e0e0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: var(--claude-bg);
+            color: var(--claude-text);
             height: 100vh;
             display: flex;
             overflow: hidden;
@@ -27,71 +51,157 @@
             gap: 0;
         }
 
+        /* ===== Sidebar ===== */
         .sidebar {
-            width: 300px;
-            background: #0a0a0a;
-            border-right: 1px solid #1a1a1a;
+            width: 280px;
+            background: var(--claude-sidebar);
+            border-right: 1px solid var(--claude-border);
             display: flex;
             flex-direction: column;
-            padding: 20px;
+            padding: 0;
             overflow-y: auto;
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .sidebar-brand {
+            padding: 20px 20px 16px;
+            border-bottom: 1px solid var(--claude-border);
+            background: linear-gradient(180deg, rgba(217,119,87,0.06) 0%, transparent 100%);
         }
 
         .sidebar-header {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 20px;
-            color: #4a90d9;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--claude-accent);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            text-shadow:
+                1px 1px 0px rgba(217,119,87,0.3),
+                2px 2px 0px rgba(217,119,87,0.15),
+                3px 3px 6px rgba(45,43,40,0.1);
+            letter-spacing: 0.5px;
+            margin-bottom: 0;
+        }
+
+        .sidebar-header .brand-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--claude-accent);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            box-shadow: 0 2px 8px var(--claude-accent-glow);
+        }
+
+        .sidebar-nav {
+            padding: 12px;
         }
 
         .new-chat-btn {
             width: 100%;
-            padding: 12px;
-            background: #4a90d9;
+            padding: 11px 16px;
+            background: var(--claude-accent);
             color: white;
             border: none;
-            border-radius: 6px;
+            border-radius: 12px;
             cursor: pointer;
-            font-weight: 500;
-            margin-bottom: 20px;
-            transition: background 0.2s;
+            font-weight: 600;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 8px var(--claude-accent-glow), 0 1px 2px rgba(0,0,0,0.06);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .new-chat-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
         }
 
         .new-chat-btn:hover {
-            background: #357abd;
+            background: var(--claude-accent-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px var(--claude-accent-glow), 0 2px 4px rgba(0,0,0,0.08);
+        }
+
+        .new-chat-btn:hover::before {
+            left: 100%;
+        }
+
+        .new-chat-btn:active {
+            transform: translateY(0);
+        }
+
+        .chat-history-section {
+            padding: 0 12px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .chat-history-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--claude-text-muted);
+            padding: 12px 8px 8px;
         }
 
         .chat-history {
-            flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 4px;
             overflow-y: auto;
         }
 
         .chat-item {
             padding: 10px 12px;
-            background: rgba(74, 144, 217, 0.1);
+            background: transparent;
             border-left: 3px solid transparent;
-            border-radius: 4px;
+            border-radius: 10px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             font-size: 13px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
 
         .chat-item:hover {
-            background: rgba(74, 144, 217, 0.2);
+            background: var(--claude-sidebar-hover);
         }
 
         .chat-item.active {
-            background: rgba(74, 144, 217, 0.25);
-            border-left-color: #4a90d9;
+            background: rgba(217, 119, 87, 0.1);
+            border-left-color: transparent;
+        }
+
+        .chat-item-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            background: var(--claude-accent-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            flex-shrink: 0;
         }
 
         .chat-item-text {
@@ -103,23 +213,25 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            font-weight: 500;
+            color: var(--claude-text);
         }
 
         .chat-item-date {
             font-size: 10px;
-            color: #666;
+            color: var(--claude-text-muted);
             margin-top: 2px;
         }
 
         .chat-item-delete {
-            width: 22px;
-            height: 22px;
-            border-radius: 4px;
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
             background: transparent;
-            color: #666;
+            color: var(--claude-text-muted);
             border: none;
             cursor: pointer;
-            font-size: 13px;
+            font-size: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -133,82 +245,143 @@
         }
 
         .chat-item-delete:hover {
-            background: rgba(217, 74, 74, 0.2);
-            color: #d94a4a;
+            background: rgba(220, 70, 50, 0.12);
+            color: #dc4632;
         }
 
         .sidebar-footer {
-            padding-top: 12px;
-            border-top: 1px solid rgba(74, 144, 217, 0.15);
-            margin-top: 12px;
+            padding: 12px;
+            border-top: 1px solid var(--claude-border);
+            margin-top: 0;
         }
 
         .clear-history-btn {
             width: 100%;
             padding: 8px;
             background: transparent;
-            color: #666;
-            border: 1px solid rgba(217, 74, 74, 0.2);
-            border-radius: 6px;
+            color: var(--claude-text-muted);
+            border: 1px solid var(--claude-border);
+            border-radius: 10px;
             cursor: pointer;
             font-size: 12px;
+            font-family: inherit;
             transition: all 0.2s;
         }
 
         .clear-history-btn:hover {
-            background: rgba(217, 74, 74, 0.1);
-            color: #d94a4a;
-            border-color: #d94a4a;
+            background: rgba(220, 70, 50, 0.08);
+            color: #dc4632;
+            border-color: rgba(220, 70, 50, 0.3);
         }
 
+        /* ===== Main Area ===== */
         .main-area {
             flex: 1;
             display: flex;
             flex-direction: column;
-            background: #000000;
+            background: var(--claude-bg);
+            position: relative;
         }
 
+        /* ===== Navbar / Header ===== */
         .header {
-            background: #0a0a0a;
-            border-bottom: 1px solid #1a1a1a;
-            padding: 20px;
+            background: rgba(250, 249, 246, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--claude-border-light);
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 1px 3px var(--claude-shadow);
+        }
+
+        .header-inner {
             text-align: center;
         }
 
         .header h1 {
-            font-size: 24px;
-            color: #4a90d9;
-            margin-bottom: 4px;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--claude-accent);
+            margin-bottom: 2px;
+            text-shadow:
+                1px 1px 0px rgba(217,119,87,0.25),
+                2px 2px 0px rgba(217,119,87,0.12),
+                3px 3px 0px rgba(217,119,87,0.06),
+                4px 4px 10px rgba(45,43,40,0.08);
+            letter-spacing: 0.5px;
+            line-height: 1.1;
+            animation: titleFloat 6s ease-in-out infinite;
+        }
+
+        @keyframes titleFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-2px); }
         }
 
         .header p {
-            font-size: 12px;
-            color: #999;
+            font-size: 13px;
+            color: var(--claude-text-secondary);
+            font-weight: 400;
+            letter-spacing: 0.3px;
         }
 
+        .header-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--claude-accent-light);
+            color: var(--claude-accent);
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 20px;
+            margin-top: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .header-badge .pulse-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--claude-accent);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+
+        /* ===== Messages Area ===== */
         .messages-area {
             flex: 1;
             overflow-y: auto;
-            padding: 20px;
+            padding: 24px 20px;
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 20px;
+            background: linear-gradient(180deg, var(--claude-bg) 0%, var(--claude-bg-alt) 100%);
         }
 
         .message {
             display: flex;
             gap: 12px;
-            animation: slideIn 0.3s ease-out;
+            animation: messageSlide 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        @keyframes slideIn {
+        @keyframes messageSlide {
             from {
                 opacity: 0;
-                transform: translateY(10px);
+                transform: translateY(16px) scale(0.98);
             }
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateY(0) scale(1);
             }
         }
 
@@ -218,62 +391,73 @@
 
         .message-content {
             max-width: 70%;
-            padding: 12px 16px;
-            border-radius: 8px;
-            line-height: 1.5;
+            padding: 14px 18px;
+            border-radius: 18px;
+            line-height: 1.6;
             word-wrap: break-word;
+            font-size: 14px;
         }
 
         .message.assistant .message-content {
-            background: #111111;
-            color: #e0e0e0;
-            border: 1px solid #1a1a1a;
+            background: var(--claude-assistant-bg);
+            color: var(--claude-text);
+            border: 1px solid var(--claude-border-light);
+            border-radius: 18px 18px 18px 4px;
+            box-shadow: 0 1px 4px var(--claude-shadow);
         }
 
         .message.user .message-content {
-            background: #4a90d9;
+            background: var(--claude-user-bubble);
             color: white;
+            border-radius: 18px 18px 4px 18px;
+            box-shadow: 0 2px 8px var(--claude-accent-glow);
         }
 
+        /* ===== Artifacts ===== */
         .artifact {
             max-width: 95%;
-            background: #0a0a0a;
-            border: 1px solid #222;
-            border-radius: 10px;
+            background: var(--claude-assistant-bg);
+            border: 1px solid var(--claude-border);
+            border-radius: 16px;
             overflow: hidden;
             margin: 10px 0;
-            transition: box-shadow 0.2s;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 8px var(--claude-shadow);
         }
 
         .artifact:hover {
-            box-shadow: 0 0 20px rgba(74, 144, 217, 0.15);
+            box-shadow: 0 4px 20px var(--claude-shadow-md);
+            transform: translateY(-1px);
         }
 
         .artifact-title {
-            padding: 10px 16px;
-            border-bottom: 1px solid #1a1a1a;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--claude-border-light);
             font-weight: 600;
             font-size: 13px;
-            color: #4a90d9;
+            color: var(--claude-accent);
             display: flex;
             align-items: center;
             justify-content: space-between;
+            background: linear-gradient(180deg, var(--claude-bg) 0%, transparent 100%);
         }
 
         .artifact-expand-btn {
-            background: none;
-            border: 1px solid #333;
-            color: #888;
-            padding: 3px 8px;
-            border-radius: 4px;
+            background: transparent;
+            border: 1px solid var(--claude-border);
+            color: var(--claude-text-secondary);
+            padding: 4px 10px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 11px;
+            font-family: inherit;
             transition: all 0.15s;
         }
 
         .artifact-expand-btn:hover {
-            border-color: #4a90d9;
-            color: #4a90d9;
+            border-color: var(--claude-accent);
+            color: var(--claude-accent);
+            background: var(--claude-accent-light);
         }
 
         .artifact-content {
@@ -290,23 +474,24 @@
             width: 100%;
         }
 
+        /* ===== Loading ===== */
         .loading {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             padding: 12px 16px;
         }
 
         .loading-dots {
             display: flex;
-            gap: 4px;
+            gap: 5px;
         }
 
         .loading-dot {
             width: 8px;
             height: 8px;
             border-radius: 50%;
-            background: #4a90d9;
+            background: var(--claude-accent);
             animation: bounce 1.4s infinite;
         }
 
@@ -315,22 +500,27 @@
         .loading-dot:nth-child(3) { animation-delay: 0.4s; }
 
         @keyframes bounce {
-            0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+            0%, 80%, 100% { transform: scale(0.7); opacity: 0.4; }
             40% { transform: scale(1); opacity: 1; }
         }
 
         .thinking-text {
             font-size: 13px;
-            color: #4a90d9;
+            color: var(--claude-accent);
             font-style: italic;
+            font-weight: 500;
         }
 
+        /* ===== Input Area ===== */
         .input-area {
-            background: #0a0a0a;
-            border-top: 1px solid #1a1a1a;
-            padding: 16px 20px;
+            background: rgba(250, 249, 246, 0.9);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-top: 1px solid var(--claude-border-light);
+            padding: 16px 24px;
             display: flex;
             gap: 12px;
+            box-shadow: 0 -2px 10px var(--claude-shadow);
         }
 
         .input-wrapper {
@@ -343,68 +533,101 @@
         .input-box {
             display: flex;
             gap: 8px;
+            align-items: flex-end;
         }
 
         #messageInput {
             flex: 1;
-            background: #111111;
-            border: 1px solid #222;
-            color: #e0e0e0;
-            padding: 12px;
-            border-radius: 6px;
+            background: var(--claude-input-bg);
+            border: 2px solid var(--claude-border);
+            color: var(--claude-text);
+            padding: 12px 16px;
+            border-radius: 16px;
             font-size: 14px;
             font-family: inherit;
             resize: none;
             max-height: 100px;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 1px 4px var(--claude-shadow);
+        }
+
+        #messageInput::placeholder {
+            color: var(--claude-text-muted);
         }
 
         #messageInput:focus {
             outline: none;
-            border-color: #4a90d9;
+            border-color: var(--claude-accent);
+            box-shadow: 0 0 0 3px var(--claude-accent-light), 0 2px 8px var(--claude-shadow);
         }
 
         .send-btn {
-            background: #4a90d9;
+            background: var(--claude-accent);
             color: white;
             border: none;
-            border-radius: 6px;
-            padding: 12px 20px;
+            border-radius: 14px;
+            padding: 12px 22px;
             cursor: pointer;
-            font-weight: 500;
-            transition: background 0.2s;
+            font-weight: 600;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             white-space: nowrap;
+            box-shadow: 0 2px 8px var(--claude-accent-glow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .send-btn::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(255,255,255,0.15) 0%, transparent 50%);
+            pointer-events: none;
         }
 
         .send-btn:hover:not(:disabled) {
-            background: #357abd;
+            background: var(--claude-accent-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px var(--claude-accent-glow);
+        }
+
+        .send-btn:active:not(:disabled) {
+            transform: translateY(0);
         }
 
         .send-btn:disabled {
-            background: #666;
+            background: var(--claude-border);
             cursor: not-allowed;
+            box-shadow: none;
+            color: var(--claude-text-muted);
         }
 
         .send-btn.stop-btn {
-            background: #d94a4a;
+            background: #dc4632;
+            box-shadow: 0 2px 8px rgba(220, 70, 50, 0.3);
         }
 
         .send-btn.stop-btn:hover {
-            background: #b93a3a;
+            background: #c03a28;
         }
 
         .image-upload {
-            padding: 8px 12px;
-            background: #111111;
-            border: 1px solid #222;
-            border-radius: 6px;
+            padding: 8px 14px;
+            background: var(--claude-input-bg);
+            border: 1px solid var(--claude-border);
+            border-radius: 10px;
             cursor: pointer;
             font-size: 12px;
-            color: #999;
+            color: var(--claude-text-secondary);
+            font-family: inherit;
+            transition: all 0.2s;
         }
 
         .image-upload:hover {
-            border-color: #4a90d9;
-            color: #4a90d9;
+            border-color: var(--claude-accent);
+            color: var(--claude-accent);
+            background: var(--claude-accent-light);
         }
 
         #imageInput {
@@ -413,19 +636,19 @@
 
         .status {
             padding: 12px 16px;
-            background: rgba(74, 144, 217, 0.1);
-            border-radius: 6px;
+            background: var(--claude-accent-light);
+            border-radius: 12px;
             font-size: 12px;
-            color: #999;
+            color: var(--claude-text-secondary);
             text-align: center;
         }
 
         .status.error {
-            background: rgba(217, 74, 74, 0.1);
-            color: #ff6b6b;
+            background: rgba(220, 70, 50, 0.08);
+            color: #dc4632;
         }
 
-        /* Responsive */
+        /* ===== Responsive ===== */
         @media (max-width: 768px) {
             .sidebar {
                 width: 0;
@@ -438,11 +661,15 @@
             .message-content {
                 max-width: 90%;
             }
+
+            .header h1 {
+                font-size: 28px;
+            }
         }
 
-        /* Scrollbar styling */
+        /* ===== Scrollbar ===== */
         ::-webkit-scrollbar {
-            width: 8px;
+            width: 6px;
         }
 
         ::-webkit-scrollbar-track {
@@ -450,14 +677,15 @@
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #222;
-            border-radius: 4px;
+            background: var(--claude-border);
+            border-radius: 3px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: #4a90d9;
+            background: var(--claude-accent);
         }
 
+        /* ===== Tables ===== */
         .table {
             width: 100%;
             border-collapse: collapse;
@@ -466,77 +694,80 @@
 
         .table th,
         .table td {
-            padding: 8px;
+            padding: 10px 12px;
             text-align: left;
-            border-bottom: 1px solid #16213e;
+            border-bottom: 1px solid var(--claude-border-light);
         }
 
         .table th {
-            background: #111;
+            background: var(--claude-bg-alt);
             font-weight: 600;
-            color: #4a90d9;
+            color: var(--claude-accent);
         }
 
         .table tr:hover {
-            background: rgba(74, 144, 217, 0.1);
+            background: var(--claude-accent-light);
         }
 
-        /* Voice controls */
+        /* ===== Voice Controls ===== */
         .voice-btn {
             padding: 8px 14px;
-            background: #111111;
-            border: 1px solid #222;
-            border-radius: 6px;
+            background: var(--claude-input-bg);
+            border: 1px solid var(--claude-border);
+            border-radius: 12px;
             cursor: pointer;
             font-size: 16px;
-            color: #999;
+            color: var(--claude-text-muted);
             transition: all 0.2s;
             line-height: 1;
         }
 
         .voice-btn:hover {
-            border-color: #4a90d9;
-            color: #4a90d9;
+            border-color: var(--claude-accent);
+            color: var(--claude-accent);
         }
 
         .voice-btn.recording {
-            background: rgba(217, 74, 74, 0.2);
-            border-color: #d94a4a;
-            color: #d94a4a;
+            background: rgba(220, 70, 50, 0.1);
+            border-color: #dc4632;
+            color: #dc4632;
             animation: pulse-red 1.5s infinite;
         }
 
         @keyframes pulse-red {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(217, 74, 74, 0.4); }
-            50% { box-shadow: 0 0 0 8px rgba(217, 74, 74, 0); }
+            0%, 100% { box-shadow: 0 0 0 0 rgba(220, 70, 50, 0.35); }
+            50% { box-shadow: 0 0 0 8px rgba(220, 70, 50, 0); }
         }
 
         .tts-toggle {
             padding: 8px 12px;
-            background: #111111;
-            border: 1px solid #222;
-            border-radius: 6px;
+            background: var(--claude-input-bg);
+            border: 1px solid var(--claude-border);
+            border-radius: 10px;
             cursor: pointer;
             font-size: 12px;
-            color: #999;
+            color: var(--claude-text-muted);
+            font-family: inherit;
             transition: all 0.2s;
         }
 
         .tts-toggle.active {
-            border-color: #60d94a;
-            color: #60d94a;
+            border-color: #3a9d2e;
+            color: #3a9d2e;
+            background: rgba(58, 157, 46, 0.08);
         }
 
+        /* ===== Artifact Loading ===== */
         .artifact-loading {
             display: flex;
             align-items: center;
             gap: 10px;
             padding: 16px;
-            background: rgba(74, 144, 217, 0.08);
-            border: 1px dashed #4a90d9;
-            border-radius: 8px;
+            background: var(--claude-accent-light);
+            border: 1px dashed var(--claude-accent);
+            border-radius: 12px;
             margin: 8px 0;
-            color: #4a90d9;
+            color: var(--claude-accent);
             font-size: 13px;
             font-style: italic;
         }
@@ -544,7 +775,7 @@
         .artifact-loading .spinner {
             width: 16px;
             height: 16px;
-            border: 2px solid #4a90d9;
+            border: 2px solid var(--claude-accent);
             border-top-color: transparent;
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
@@ -560,6 +791,7 @@
             align-items: center;
         }
 
+        /* ===== Image Previews ===== */
         .image-preview-grid {
             display: flex;
             flex-wrap: wrap;
@@ -576,61 +808,65 @@
         .image-preview-item img {
             height: 64px;
             width: 64px;
-            border-radius: 6px;
-            border: 1px solid #4a90d9;
+            border-radius: 10px;
+            border: 2px solid var(--claude-accent);
             object-fit: cover;
+            box-shadow: 0 2px 6px var(--claude-shadow);
         }
 
         .image-preview-item .remove-img {
             position: absolute;
             top: -6px;
             right: -6px;
-            width: 18px;
-            height: 18px;
+            width: 20px;
+            height: 20px;
             border-radius: 50%;
-            background: #d94a4a;
+            background: #dc4632;
             color: white;
-            border: none;
+            border: 2px solid var(--claude-bg);
             font-size: 11px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             line-height: 1;
+            transition: transform 0.15s;
         }
 
         .image-preview-item .remove-img:hover {
-            background: #b93a3a;
+            background: #c03a28;
+            transform: scale(1.1);
         }
 
         .image-counter {
             font-size: 11px;
-            color: #4a90d9;
-            padding: 4px 8px;
-            background: rgba(74, 144, 217, 0.1);
-            border-radius: 4px;
+            color: var(--claude-accent);
+            padding: 4px 10px;
+            background: var(--claude-accent-light);
+            border-radius: 8px;
             white-space: nowrap;
             height: fit-content;
+            font-weight: 500;
         }
 
         .image-counter.at-limit {
-            color: #d94a4a;
-            background: rgba(217, 74, 74, 0.1);
+            color: #dc4632;
+            background: rgba(220, 70, 50, 0.08);
         }
 
         .char-counter {
             font-size: 11px;
-            color: #666;
+            color: var(--claude-text-muted);
             text-align: right;
             margin-top: 2px;
         }
 
         .char-counter.near-limit {
-            color: #e8a838;
+            color: #d4920a;
         }
 
         .char-counter.at-limit {
-            color: #d94a4a;
+            color: #dc4632;
         }
 
         /* ===== Artifact Fullscreen Modal ===== */
@@ -640,11 +876,12 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.92);
+            background: rgba(45, 43, 40, 0.85);
+            backdrop-filter: blur(8px);
             z-index: 1000;
             display: flex;
             flex-direction: column;
-            animation: fadeIn 0.2s ease-out;
+            animation: fadeIn 0.25s ease-out;
         }
 
         @keyframes fadeIn {
@@ -657,14 +894,14 @@
             align-items: center;
             justify-content: space-between;
             padding: 16px 24px;
-            background: #0a0a0a;
-            border-bottom: 1px solid #222;
+            background: var(--claude-bg);
+            border-bottom: 1px solid var(--claude-border);
         }
 
         .artifact-modal-title {
             font-size: 16px;
             font-weight: 600;
-            color: #4a90d9;
+            color: var(--claude-accent);
         }
 
         .artifact-modal-controls {
@@ -674,30 +911,31 @@
         }
 
         .artifact-modal-btn {
-            background: #111;
-            border: 1px solid #333;
-            color: #ccc;
-            padding: 6px 14px;
-            border-radius: 6px;
+            background: var(--claude-input-bg);
+            border: 1px solid var(--claude-border);
+            color: var(--claude-text-secondary);
+            padding: 7px 14px;
+            border-radius: 10px;
             cursor: pointer;
             font-size: 13px;
+            font-family: inherit;
             transition: all 0.15s;
         }
 
         .artifact-modal-btn:hover {
-            border-color: #4a90d9;
-            color: #4a90d9;
+            border-color: var(--claude-accent);
+            color: var(--claude-accent);
         }
 
         .artifact-modal-btn.close-btn {
-            background: #d94a4a;
-            border-color: #d94a4a;
+            background: #dc4632;
+            border-color: #dc4632;
             color: white;
             font-weight: 600;
         }
 
         .artifact-modal-btn.close-btn:hover {
-            background: #b93a3a;
+            background: #c03a28;
         }
 
         .artifact-modal-body {
@@ -710,14 +948,15 @@
         }
 
         .artifact-modal-content {
-            background: #0a0a0a;
-            border: 1px solid #222;
-            border-radius: 10px;
+            background: var(--claude-bg);
+            border: 1px solid var(--claude-border);
+            border-radius: 16px;
             padding: 24px;
             max-width: 100%;
             min-width: 60%;
             transition: transform 0.15s;
             transform-origin: top center;
+            box-shadow: 0 8px 40px rgba(45, 43, 40, 0.2);
         }
 
         .artifact-modal-content svg {
@@ -729,25 +968,84 @@
             width: 100%;
             min-height: 400px;
             border: none;
-            border-radius: 6px;
-            background: #0a0a0a;
+            border-radius: 8px;
+            background: var(--claude-bg);
         }
 
         .table td,
         .table th {
-            border-bottom-color: #1a1a1a;
+            border-bottom-color: var(--claude-border-light);
+        }
+
+        /* ===== Welcome special styling ===== */
+        .welcome-title {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 28px;
+            color: var(--claude-accent);
+            margin-bottom: 12px;
+            text-shadow:
+                1px 1px 0px rgba(217,119,87,0.2),
+                2px 2px 4px rgba(45,43,40,0.06);
+        }
+
+        .welcome-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .welcome-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            background: var(--claude-accent-light);
+            border-radius: 10px;
+            font-size: 13px;
+            transition: all 0.2s;
+            cursor: default;
+        }
+
+        .welcome-item:hover {
+            background: rgba(217, 119, 87, 0.18);
+            transform: translateX(4px);
+        }
+
+        .welcome-item-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            background: var(--claude-accent);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+
+        .welcome-item strong {
+            color: var(--claude-accent);
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="sidebar">
-            <div class="sidebar-header">
-                ⚙️ OmniPro 220
+            <div class="sidebar-brand">
+                <div class="sidebar-header">
+                    <span class="brand-icon">⚙️</span> OmniPro 220
+                </div>
             </div>
-            <button class="new-chat-btn" onclick="startNewChat()">+ New Chat</button>
-            <div class="chat-history" id="chatHistory">
-                <div class="status">No previous chats</div>
+            <div class="sidebar-nav">
+                <button class="new-chat-btn" onclick="startNewChat()">✦ New Chat</button>
+            </div>
+            <div class="chat-history-section">
+                <div class="chat-history-label">Recent</div>
+                <div class="chat-history" id="chatHistory">
+                    <div class="status">No previous chats</div>
+                </div>
             </div>
             <div class="sidebar-footer" id="sidebarFooter" style="display:none">
                 <button class="clear-history-btn" onclick="clearAllHistory()">Clear all history</button>
@@ -756,22 +1054,36 @@
 
         <div class="main-area">
             <div class="header">
-                <h1>Vulcan OmniPro 220 Expert</h1>
-                <p>Multimodal AI advisor for your welding machine</p>
+                <div class="header-inner">
+                    <h1>Vulcan OmniPro 220 Expert</h1>
+                    <p>Multimodal AI advisor for your welding machine</p>
+                    <div class="header-badge"><span class="pulse-dot"></span> AI Powered</div>
+                </div>
             </div>
 
             <div class="messages-area" id="messagesArea">
                 <div class="message assistant">
                     <div class="message-content">
-                        👋 Welcome! I'm your Vulcan OmniPro 220 expert. 
-                        <br><br>
-                        I can help you with:
-                        • <strong>Duty cycles & settings</strong> - "What's the duty cycle at 200A?"
-                        • <strong>Polarity & wiring</strong> - "How do I set up TIG welding?"
-                        • <strong>Troubleshooting</strong> - "I'm getting porosity in my welds"
-                        • <strong>Specifications</strong> - "What are the machine specs?"
-                        <br><br>
-                        Ask me anything about your welder!
+                        <div class="welcome-title">👋 Hey there, welder!</div>
+                        I'm your Vulcan OmniPro 220 expert, here to help with anything about your machine.
+                        <div class="welcome-list">
+                            <div class="welcome-item">
+                                <span class="welcome-item-icon">⚡</span>
+                                <span><strong>Duty cycles & settings</strong> — "What's the duty cycle at 200A?"</span>
+                            </div>
+                            <div class="welcome-item">
+                                <span class="welcome-item-icon">🔌</span>
+                                <span><strong>Polarity & wiring</strong> — "How do I set up TIG welding?"</span>
+                            </div>
+                            <div class="welcome-item">
+                                <span class="welcome-item-icon">🔧</span>
+                                <span><strong>Troubleshooting</strong> — "I'm getting porosity in my welds"</span>
+                            </div>
+                            <div class="welcome-item">
+                                <span class="welcome-item-icon">📋</span>
+                                <span><strong>Specifications</strong> — "What are the machine specs?"</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -895,13 +1207,14 @@
             const welcomeDiv = document.createElement('div');
             welcomeDiv.className = 'message assistant';
             welcomeDiv.innerHTML = `<div class="message-content">
-                        👋 Welcome! I'm your Vulcan OmniPro 220 expert.
-                        <br><br>
-                        I can help you with:
-                        • <strong>Duty cycles & settings</strong>
-                        • <strong>Polarity & wiring</strong>
-                        • <strong>Troubleshooting</strong>
-                        • <strong>Specifications</strong>
+                        <div class="welcome-title">👋 Hey there, welder!</div>
+                        I'm your Vulcan OmniPro 220 expert, here to help with anything about your machine.
+                        <div class="welcome-list">
+                            <div class="welcome-item"><span class="welcome-item-icon">⚡</span><span><strong>Duty cycles & settings</strong></span></div>
+                            <div class="welcome-item"><span class="welcome-item-icon">🔌</span><span><strong>Polarity & wiring</strong></span></div>
+                            <div class="welcome-item"><span class="welcome-item-icon">🔧</span><span><strong>Troubleshooting</strong></span></div>
+                            <div class="welcome-item"><span class="welcome-item-icon">📋</span><span><strong>Specifications</strong></span></div>
+                        </div>
                     </div>`;
             messagesArea.appendChild(welcomeDiv);
 
@@ -977,6 +1290,7 @@
                 item.className = 'chat-item' + (isActive ? ' active' : '');
                 item.onclick = () => loadChat(chat.id);
                 item.innerHTML = `
+                    <div class="chat-item-icon">💬</div>
                     <div class="chat-item-text">
                         <div class="chat-item-title">${escapeHtml(chat.title)}</div>
                         <div class="chat-item-date">${dateStr}</div>
@@ -1005,15 +1319,26 @@
             document.getElementById('messagesArea').innerHTML = `
                 <div class="message assistant">
                     <div class="message-content">
-                        👋 Welcome! I'm your Vulcan OmniPro 220 expert. 
-                        <br><br>
-                        I can help you with:
-                        • <strong>Duty cycles & settings</strong> - "What's the duty cycle at 200A?"
-                        • <strong>Polarity & wiring</strong> - "How do I set up TIG welding?"
-                        • <strong>Troubleshooting</strong> - "I'm getting porosity in my welds"
-                        • <strong>Specifications</strong> - "What are the machine specs?"
-                        <br><br>
-                        Ask me anything about your welder!
+                        <div class="welcome-title">👋 Hey there, welder!</div>
+                        I'm your Vulcan OmniPro 220 expert, here to help with anything about your machine.
+                        <div class="welcome-list">
+                            <div class="welcome-item">
+                                <span class="welcome-item-icon">⚡</span>
+                                <span><strong>Duty cycles & settings</strong> — "What's the duty cycle at 200A?"</span>
+                            </div>
+                            <div class="welcome-item">
+                                <span class="welcome-item-icon">🔌</span>
+                                <span><strong>Polarity & wiring</strong> — "How do I set up TIG welding?"</span>
+                            </div>
+                            <div class="welcome-item">
+                                <span class="welcome-item-icon">🔧</span>
+                                <span><strong>Troubleshooting</strong> — "I'm getting porosity in my welds"</span>
+                            </div>
+                            <div class="welcome-item">
+                                <span class="welcome-item-icon">📋</span>
+                                <span><strong>Specifications</strong> — "What are the machine specs?"</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             `;
@@ -1734,16 +2059,16 @@
 
             // Code blocks (``` ... ```)
             html = html.replace(/```(\w*)\n([\s\S]*?)```/g, function(m, lang, code) {
-                return '<pre style="background:#0d1117;padding:12px;border-radius:6px;overflow-x:auto;font-size:13px;"><code>' + code.trim() + '</code></pre>';
+                return '<pre style="background:#2D2B28;color:#F5F0E8;padding:14px;border-radius:10px;overflow-x:auto;font-size:13px;border:1px solid #E0DAD0;"><code>' + code.trim() + '</code></pre>';
             });
 
             // Inline code
-            html = html.replace(/`([^`]+)`/g, '<code style="background:#0d1117;padding:2px 6px;border-radius:3px;font-size:13px;">$1</code>');
+            html = html.replace(/`([^`]+)`/g, '<code style="background:rgba(217,119,87,0.1);color:#D97757;padding:2px 6px;border-radius:4px;font-size:13px;">$1</code>');
 
             // Headers
-            html = html.replace(/^### (.+)$/gm, '<h3 style="color:#4a90d9;margin:12px 0 6px;">$1</h3>');
-            html = html.replace(/^## (.+)$/gm, '<h2 style="color:#4a90d9;margin:14px 0 8px;">$1</h2>');
-            html = html.replace(/^# (.+)$/gm, '<h1 style="color:#4a90d9;margin:16px 0 10px;">$1</h1>');
+            html = html.replace(/^### (.+)$/gm, '<h3 style="color:#D97757;margin:12px 0 6px;font-family:Times New Roman,Times,serif;font-size:22px;">$1</h3>');
+            html = html.replace(/^## (.+)$/gm, '<h2 style="color:#D97757;margin:14px 0 8px;font-family:Times New Roman,Times,serif;font-size:26px;">$1</h2>');
+            html = html.replace(/^# (.+)$/gm, '<h1 style="color:#D97757;margin:16px 0 10px;font-family:Times New Roman,Times,serif;font-size:30px;">$1</h1>');
 
             // Bold and italic
             html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
@@ -1759,7 +2084,7 @@
             html = html.replace(/^\d+\. (.+)$/gm, '<li>$1</li>');
 
             // Horizontal rule
-            html = html.replace(/^---$/gm, '<hr style="border:none;border-top:1px solid #16213e;margin:12px 0;">');
+            html = html.replace(/^---$/gm, '<hr style="border:none;border-top:1px solid #E0DAD0;margin:12px 0;">');
 
             // Line breaks
             html = html.replace(/\n/g, '<br>');
